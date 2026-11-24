@@ -109,7 +109,17 @@ const destinationStayPhotos = {
   'london-buckingham': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Buckingham_Palace%2C_London_-_April_2009.jpg/1280px-Buckingham_Palace%2C_London_-_April_2009.jpg',
   'london-eye': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/London_Eye_Twilight_April_2006.jpg/1280px-London_Eye_Twilight_April_2006.jpg',
   'london-st-pauls': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Cath%C3%A9drale_St-Paul_-_coupole.jpg/1280px-Cath%C3%A9drale_St-Paul_-_coupole.jpg',
-  'jaipur-jantar': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/20191218_Jantar_Mantar%2C_Jaipur_0906_8983_DxO.jpg/1280px-20191218_Jantar_Mantar%2C_Jaipur_0906_8983_DxO.jpg'
+  'jaipur-jantar': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/20191218_Jantar_Mantar%2C_Jaipur_0906_8983_DxO.jpg/1280px-20191218_Jantar_Mantar%2C_Jaipur_0906_8983_DxO.jpg',
+  'delhi-lotus': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Lotus_Temple_in_New_Delhi_03-2016.jpg/1280px-Lotus_Temple_in_New_Delhi_03-2016.jpg',
+  'jaipur-nahargarh': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/20191218_Fort_Nahargarh%2C_Jaipur_1514_9294.jpg/1280px-20191218_Fort_Nahargarh%2C_Jaipur_1514_9294.jpg',
+  'goa-chapora': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Fort_Chapora_26012016.jpg/1280px-Fort_Chapora_26012016.jpg',
+  'mumbai-gateway': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Panoramic_view_of_Taj_Palace_Hotel_and_Taj_Tower_with_the_iconic_Gateway_of_India_in_the_background.jpg/1280px-Panoramic_view_of_Taj_Palace_Hotel_and_Taj_Tower_with_the_iconic_Gateway_of_India_in_the_background.jpg',
+  'manali-beas': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Beas_River_at_Nehru_Kund%2C_Manali_%282%29.jpg/1280px-Beas_River_at_Nehru_Kund%2C_Manali_%282%29.jpg',
+  'bengaluru-nandi': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Nandi_Hills%2C_Bengaluru.jpg/1280px-Nandi_Hills%2C_Bengaluru.jpg',
+  'bali-ulun-danu': 'https://upload.wikimedia.org/wikipedia/commons/d/db/Pura_Ulun_Danu_Beratan_in_bali.jpg',
+  'dubai-burj': 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Burj_dubai_3.11.08.jpg',
+  'london-tower-bridge': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Tower_Bridge_London_Dusk_Feb_2006.jpg/1280px-Tower_Bridge_London_Dusk_Feb_2006.jpg',
+  'paris-eiffel': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/1280px-Tour_Eiffel_Wikimedia_Commons.jpg'
 };
 
 const coordinatesByCity = {
@@ -196,6 +206,49 @@ const listingTemplates = [
   ['Rooftop stay near Jantar Mantar', 'Jaipur', 'India', 'Apartment', 'desert', 9800, 'jaipur-jantar']
 ];
 
+const additionalDestinationTemplates = [
+  ['Sunny loft near Lotus Temple', 'Delhi', 'India', 'Apartment', 'city', 8800, 'delhi-lotus'],
+  ['Hilltop haveli near Nahargarh Fort', 'Jaipur', 'India', 'House', 'desert', 11400, 'jaipur-nahargarh'],
+  ['Clifftop home near Chapora Fort', 'Goa', 'India', 'Villa', 'beach', 13500, 'goa-chapora'],
+  ['Harbor apartment near Gateway of India', 'Mumbai', 'India', 'Apartment', 'city', 16400, 'mumbai-gateway'],
+  ['Riverside cottage near Beas River', 'Manali', 'India', 'Cottage', 'mountain', 7200, 'manali-beas'],
+  ['Hill-view stay near Nandi Hills', 'Bengaluru', 'India', 'Cabin', 'mountain', 8900, 'bengaluru-nandi'],
+  ['Lakeside retreat near Ulun Danu Temple', 'Bali', 'Indonesia', 'Resort', 'beach', 17400, 'bali-ulun-danu'],
+  ['Downtown suite near Burj Khalifa', 'Dubai', 'UAE', 'Apartment', 'city', 24000, 'dubai-burj'],
+  ['River-view flat near Tower Bridge', 'London', 'United Kingdom', 'Apartment', 'city', 23000, 'london-tower-bridge'],
+  ['Parisian apartment near the Eiffel Tower', 'Paris', 'France', 'Apartment', 'city', 21000, 'paris-eiffel']
+];
+
+function createListingDocument(template, index, hostIds) {
+  const [title, city, country, propertyType, imageKind, price, coverPhotoKey] = template;
+  const nearbyLandmark = title.match(/\b(?:near|by)\s+(.+)$/i)?.[1];
+  return {
+    title,
+    description: `A thoughtfully designed ${propertyType.toLowerCase()} with warm interiors and modern comforts${nearbyLandmark ? ` near ${nearbyLandmark}, a favorite place to explore in ${city}` : ` for an effortless stay in ${city}`}.`,
+    location: nearbyLandmark ? `near ${nearbyLandmark}` : `${city} city area`,
+    city,
+    country,
+    coordinates: coordinatesByCity[city],
+    pricePerNight: price,
+    images: [
+      jaipurStayCovers[coverPhotoKey] || cityStayCovers[coverPhotoKey] || destinationStayPhotos[coverPhotoKey] || images[imageKind][0],
+      jaipurStayLandmarks[coverPhotoKey] || (destinationStayPhotos[coverPhotoKey] ? images[imageKind][0] : landmarkPhotos[city] || images[imageKind][0]),
+      jaipurStayGalleryHomes[coverPhotoKey] || images[imageKind][1]
+    ],
+    propertyType,
+    bedrooms: 1 + (index % 4),
+    beds: 1 + (index % 5),
+    bathrooms: 1 + (index % 3),
+    amenities: ['Wi-Fi', 'Air conditioning', 'Kitchen', 'Workspace', 'Pool'].slice(0, 3 + (index % 3)),
+    maxGuests: 2 + (index % 5),
+    host: hostIds[index % hostIds.length],
+    rating: index >= 20 ? 4.8 + (index % 3) / 10 : index === 0 ? 4.7 : 4.2 + (index % 8) / 10,
+    reviewCount: index === 0 ? 3 : 8 + (index % 40),
+    cleaningFee: 600 + (index % 4) * 150,
+    instantBooking: index % 3 !== 0
+  };
+}
+
 async function seed() {
   await connectDB();
   await Promise.all([User.deleteMany(), Listing.deleteMany(), Booking.deleteMany(), Review.deleteMany(), Wishlist.deleteMany()]);
@@ -211,35 +264,8 @@ async function seed() {
   ]);
 
   const hostIds = [users[4]._id, users[5]._id];
-  const listings = await Listing.insertMany(listingTemplates.map((template, index) => {
-    const [title, city, country, propertyType, imageKind, price, coverPhotoKey] = template;
-    const nearbyLandmark = title.match(/\b(?:near|by)\s+(.+)$/i)?.[1];
-    return {
-      title,
-      description: `A thoughtfully designed ${propertyType.toLowerCase()} with warm interiors and modern comforts${nearbyLandmark ? ` near ${nearbyLandmark}, a favorite place to explore in ${city}` : ` for an effortless stay in ${city}`}.`,
-      location: nearbyLandmark ? `near ${nearbyLandmark}` : `${city} city area`,
-      city,
-      country,
-      coordinates: coordinatesByCity[city],
-      pricePerNight: price,
-      images: [
-        jaipurStayCovers[coverPhotoKey] || cityStayCovers[coverPhotoKey] || destinationStayPhotos[coverPhotoKey] || images[imageKind][0],
-        jaipurStayLandmarks[coverPhotoKey] || (destinationStayPhotos[coverPhotoKey] ? images[imageKind][0] : landmarkPhotos[city] || images[imageKind][0]),
-        jaipurStayGalleryHomes[coverPhotoKey] || images[imageKind][1]
-      ],
-      propertyType,
-      bedrooms: 1 + (index % 4),
-      beds: 1 + (index % 5),
-      bathrooms: 1 + (index % 3),
-      amenities: ['Wi-Fi', 'Air conditioning', 'Kitchen', 'Workspace', 'Pool'].slice(0, 3 + (index % 3)),
-      maxGuests: 2 + (index % 5),
-      host: hostIds[index % hostIds.length],
-      rating: index >= 20 ? 4.8 + (index % 3) / 10 : index === 0 ? 4.7 : 4.2 + (index % 8) / 10,
-      reviewCount: index === 0 ? 3 : 8 + (index % 40),
-      cleaningFee: 600 + (index % 4) * 150,
-      instantBooking: index % 3 !== 0
-    };
-  }));
+  const allListingTemplates = [...listingTemplates, ...additionalDestinationTemplates];
+  const listings = await Listing.insertMany(allListingTemplates.map((template, index) => createListingDocument(template, index, hostIds)));
 
   const now = new Date();
   const pastCheckIn = new Date(now);
@@ -294,7 +320,29 @@ async function seed() {
   await mongoose.disconnect();
 }
 
-seed().catch(async (error) => {
+async function addDestinationStays() {
+  await connectDB();
+  const hostEmails = ['host@staynest.com', 'maya@staynest.com'];
+  const hosts = await User.find({ email: { $in: hostEmails } });
+  const hostIds = hostEmails.map((email) => hosts.find((host) => host.email === email)?._id);
+  if (hostIds.some((id) => !id)) throw new Error('Demo hosts are missing; seed the demo users before adding destination stays.');
+
+  const titles = additionalDestinationTemplates.map(([title]) => title);
+  const existingTitles = new Set(await Listing.distinct('title', { title: { $in: titles } }));
+  const missingTemplates = additionalDestinationTemplates
+    .map((template, index) => ({ template, index: listingTemplates.length + index }))
+    .filter(({ template }) => !existingTitles.has(template[0]));
+
+  if (missingTemplates.length) {
+    await Listing.insertMany(missingTemplates.map(({ template, index }) => createListingDocument(template, index, hostIds)));
+  }
+  console.log(`Added ${missingTemplates.length} destination stays.`);
+  await mongoose.disconnect();
+}
+
+const operation = process.argv.includes('--add-destination-stays') ? addDestinationStays : seed;
+
+operation().catch(async (error) => {
   console.error('Seed failed:', error.message);
   await mongoose.disconnect();
   process.exit(1);

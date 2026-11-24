@@ -5,7 +5,7 @@ Airbnb Clone is a full-stack, Airbnb-inspired rental marketplace built with Reac
 ## Features
 
 - Destination search, filtering, sorting, and availability-aware results
-- Homepage stay carousels grouped by destination, including Gurugram and Dehradun demo listings
+- Homepage stay carousels grouped by destination, with six stays per city and expanded Gurugram and Dehradun rows
 - Listing details, image galleries, amenities, maps fallback, and reviews
 - JWT registration/login, protected routes, roles, and password hashing
 - Real date-overlap validation and dynamic booking totals
@@ -82,6 +82,12 @@ npm run dev
 npm run seed --prefix server
 ```
 
+To add the extra sixth stay for each destination without deleting existing data, run:
+
+```bash
+npm run seed --prefix server -- --add-destination-stays
+```
+
 Development accounts:
 
 - Demo traveler: Andrew Wilson — `demo@staynest.com` / `Demo123!`
@@ -125,6 +131,7 @@ The listing detail page uses a polished approximate-location fallback. To enable
 - Paris stays: [Louvre Cour Napoléon](https://commons.wikimedia.org/wiki/File:Cour_Napol%C3%A9on_%28Flickr,_Stavros_A%29.jpg), Stavros Argiropoulos, CC BY-SA 2.0; [Notre-Dame Cathedral](https://commons.wikimedia.org/wiki/File:Cath%C3%A9drale_Notre_Dame,_Paris_30_September_2015.jpg), Antonin Subtil, CC BY-SA 4.0; [Arc de Triomphe](https://commons.wikimedia.org/wiki/File:Arc_Triomphe.jpg), Benh LIEU SONG, CC BY-SA 3.0; [Sacré-Cœur](https://commons.wikimedia.org/wiki/File:Basilique_du_Sacr%C3%A9-C%C5%93ur_de_Montmartre_-_Paris_-_GT-01_-_2024.jpg), Terragio67, CC BY-SA 4.0.
 - London stays: [Big Ben](https://commons.wikimedia.org/wiki/File:Big_Ben_Elizabeth_Tower_London_2023_01.jpg), Julian Herzog, CC BY 4.0; [Buckingham Palace](https://commons.wikimedia.org/wiki/File:Buckingham_Palace,_London_-_April_2009.jpg), Diliff, CC BY-SA 3.0; [London Eye](https://commons.wikimedia.org/wiki/File:London_Eye_Twilight_April_2006.jpg), Diliff, CC BY 2.5; [St Paul's Cathedral](https://commons.wikimedia.org/wiki/File:Cath%C3%A9drale_St-Paul_-_coupole.jpg), Bernard Gagnon, CC BY-SA 3.0.
 - Jaipur Jantar Mantar stay photo: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:20191218_Jantar_Mantar,_Jaipur_0906_8983_DxO.jpg), Jakub Hałun, CC BY-SA 4.0.
+- Sixth destination stays: [Lotus Temple](https://commons.wikimedia.org/wiki/File:Lotus_Temple_in_New_Delhi_03-2016.jpg), A.Savin, FAL; [Nahargarh Fort](https://commons.wikimedia.org/wiki/File:20191218_Fort_Nahargarh,_Jaipur_1514_9294.jpg), Jakub Hałun, CC BY-SA 4.0; [Chapora Fort](https://commons.wikimedia.org/wiki/File:Fort_Chapora_26012016.jpg), Nikhil B/Wikimedia Commons, CC BY 3.0; [Gateway of India](https://commons.wikimedia.org/wiki/File:Panoramic_view_of_Taj_Palace_Hotel_and_Taj_Tower_with_the_iconic_Gateway_of_India_in_the_background.jpg), iMahesh, CC BY-SA 4.0; [Beas River at Nehru Kund](https://commons.wikimedia.org/wiki/File:Beas_River_at_Nehru_Kund,_Manali_(2).jpg), In Transit, CC BY 4.0; [Nandi Hills](https://commons.wikimedia.org/wiki/File:Nandi_Hills,_Bengaluru.jpg), Sidhant Soni, CC BY-SA 4.0; [Ulun Danu Beratan Temple](https://commons.wikimedia.org/wiki/File:Pura_Ulun_Danu_Beratan_in_bali.jpg), Abizar Al Ghifari, CC BY-SA 4.0; [Burj Khalifa](https://commons.wikimedia.org/wiki/File:Burj_dubai_3.11.08.jpg), Aheilner, CC BY-SA 3.0; [Tower Bridge](https://commons.wikimedia.org/wiki/File:Tower_Bridge_London_Dusk_Feb_2006.jpg), Diliff, CC BY-SA 3.0; [Eiffel Tower](https://commons.wikimedia.org/wiki/File:Tour_Eiffel_Wikimedia_Commons.jpg), Benh LIEU SONG, public domain.
 - Other destination photos are served from Unsplash.
 
 ## Deployment
