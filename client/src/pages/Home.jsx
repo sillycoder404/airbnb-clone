@@ -21,6 +21,27 @@ const destinations = [
   { name: 'London', landmark: 'Tower Bridge', image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=700&q=85' }
 ];
 
+function pickFeaturedListings(listings, limit = 8) {
+  const ranked = [...listings].sort((a, b) =>
+    (b.rating || 0) - (a.rating || 0) || (b.reviewCount || 0) - (a.reviewCount || 0)
+  );
+  const featured = [];
+  const otherStays = [];
+  const seenCities = new Set();
+
+  ranked.forEach((listing) => {
+    const city = listing.city?.trim().toLowerCase();
+    if (city && !seenCities.has(city)) {
+      seenCities.add(city);
+      featured.push(listing);
+    } else {
+      otherStays.push(listing);
+    }
+  });
+
+  return [...featured, ...otherStays].slice(0, limit);
+}
+
 export default function Home() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,8 +50,8 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/listings?limit=8')
-      .then(({ data }) => setListings(data.listings))
+    api.get('/listings?limit=50')
+      .then(({ data }) => setListings(pickFeaturedListings(data.listings)))
       .catch(() => setError('We could not load stays. Please check that the backend is running.'))
       .finally(() => setLoading(false));
   }, []);
@@ -68,7 +89,14 @@ export default function Home() {
       </section>
 
       <section className="section">
-        <div className="section-heading"><div><p className="eyebrow">Handpicked for you</p><h2>Featured stays</h2></div></div>
+        <div className="section-heading featured-heading">
+          <div>
+            <p className="eyebrow">Handpicked for you</p>
+            <h2>Stay somewhere memorable</h2>
+            <p className="section-description">A curated mix of guest-loved places across different destinations.</p>
+          </div>
+          <button className="featured-action" onClick={() => navigate('/search')}>Explore all stays <span aria-hidden="true">→</span></button>
+        </div>
         {loading ? <div className="listing-grid">{[1,2,3,4].map(n => <div className="skeleton-card" key={n} />)}</div>
           : error ? <div className="error-state">{error}</div>
           : <div className="listing-grid">{listings.map(listing => <ListingCard key={listing._id} listing={listing} />)}</div>}

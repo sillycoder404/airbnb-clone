@@ -40,10 +40,24 @@ const landmarkPhotos = {
 };
 
 const jaipurStayCovers = {
+  hawa: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85',
+  amber: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85',
+  jal: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85',
+  cityPalace: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=85'
+};
+
+const jaipurStayLandmarks = {
   hawa: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Hawa_Mahal_2011.jpg/1280px-Hawa_Mahal_2011.jpg',
   amber: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Jaipur_03-2016_02_Amber_Fort.jpg/1280px-Jaipur_03-2016_02_Amber_Fort.jpg',
   jal: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/20191218_Jal_Mahal_Palace_in_Jaipur_1429_9234.jpg/1280px-20191218_Jal_Mahal_Palace_in_Jaipur_1429_9234.jpg',
   cityPalace: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/Jaipur_03-2016_20_City_Palace_complex.jpg/1280px-Jaipur_03-2016_20_City_Palace_complex.jpg'
+};
+
+const jaipurStayGalleryHomes = {
+  hawa: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85',
+  amber: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85',
+  jal: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85',
+  cityPalace: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85'
 };
 
 const coordinatesByCity = {
@@ -109,8 +123,8 @@ async function seed() {
       pricePerNight: price,
       images: [
         jaipurStayCovers[coverPhotoKey] || images[imageKind][0],
-        landmarkPhotos[city],
-        images[imageKind][1]
+        jaipurStayLandmarks[coverPhotoKey] || landmarkPhotos[city],
+        jaipurStayGalleryHomes[coverPhotoKey] || images[imageKind][1]
       ],
       propertyType,
       bedrooms: 1 + (index % 4),
