@@ -1,62 +1,12 @@
 import Booking from '../models/Booking.js';
-import Listing from '../models/Listing.js';
-
-function parseDateOnly(value) {
-  const date = new Date(`${value}T00:00:00.000Z`);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
-export async function createBooking(req, res, next) {
-  try {
-    const { listingId, checkIn, checkOut, guests } = req.body;
-    const listing = await Listing.findById(listingId);
-    if (!listing) return res.status(404).json({ message: 'Listing not found' });
-
-    const start = parseDateOnly(checkIn);
-    const end = parseDateOnly(checkOut);
-    if (!start || !end) return res.status(400).json({ message: 'Please select valid check-in and check-out dates' });
-    if (start >= end) return res.status(400).json({ message: 'Check-out must be after check-in' });
-    if (start <= new Date()) return res.status(400).json({ message: 'Check-in cannot be in the past' });
-    if (!guests || guests < 1 || guests > listing.maxGuests) {
-      return res.status(400).json({ message: `This stay allows up to ${listing.maxGuests} guests` });
-    }
-
-    const conflict = await Booking.findOne({
-      listing: listing._id,
-      status: 'confirmed',
-      checkIn: { $lt: end },
-      checkOut: { $gt: start }
-    });
-    if (conflict) return res.status(409).json({ message: 'Those dates are already booked. Please choose another date.' });
-
-    const nights = Math.round((end - start) / 86400000);
-    const subtotal = listing.pricePerNight * nights;
-    const cleaningFee = listing.cleaningFee || 0;
-    const serviceFee = Math.round(subtotal * 0.1);
-    const totalPrice = subtotal + cleaningFee + serviceFee;
-
-    const booking = await Booking.create({
-      user: req.user._id,
-      listing: listing._id,
-      checkIn: start,
-      checkOut: end,
-      guests,
-      nights,
-      pricePerNight: listing.pricePerNight,
-      cleaningFee,
-      serviceFee,
-      totalPrice
-    });
-
-    await booking.populate('listing', 'title city country images');
-    res.status(201).json({ message: 'Booking confirmed!', booking });
-  } catch (error) {
-    next(error);
-  }
-}
+import { calculateRefund, razorpayRequest } from '../utils/razorpay.js';
 
 export async function getMyBookings(req, res, next) {
   try {
+    await Booking.updateMany(
+      { user: req.user._id, status: 'pending_payment', paymentExpiresAt: { $lte: new Date() } },
+      { $set: { status: 'cancelled', paymentStatus: 'expired' } }
+    );
     const bookings = await Booking.find({ user: req.user._id })
       .populate('listing', 'title city country images location')
       .sort({ checkIn: -1 });
@@ -90,9 +40,70 @@ export async function cancelBooking(req, res, next) {
     if (req.user.role !== 'ADMIN' && booking.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'You can only cancel your own booking' });
     }
-    booking.status = 'cancelled';
-    await booking.save();
-    res.json({ message: 'Booking cancelled', booking });
+    if (booking.status === 'cancelled') return res.status(409).json({ message: 'This booking is already cancelled' });
+
+    if (booking.status === 'pending_payment') {
+      const cancelled = await Booking.findOneAndUpdate(
+        { _id: booking._id, status: 'pending_payment' },
+        { $set: { status: 'cancelled', paymentStatus: 'expired' } },
+        { new: true }
+      );
+      if (!cancelled) return res.status(409).json({ message: 'This checkout is already being processed' });
+      return res.json({ message: 'Unpaid checkout cancelled', booking: cancelled });
+    }
+
+    if (booking.status !== 'confirmed') {
+      return res.status(409).json({ message: 'This booking cannot be cancelled while another update is in progress' });
+    }
+
+    if (booking.paymentStatus === 'paid' && !booking.razorpayPaymentId) {
+      return res.status(409).json({ message: 'The payment reference is missing; contact support before cancelling' });
+    }
+    const refund = booking.paymentStatus === 'paid'
+      ? calculateRefund(booking.totalPrice, booking.checkIn)
+      : null;
+    const claimed = await Booking.findOneAndUpdate(
+      { _id: booking._id, status: 'confirmed' },
+      {
+        $set: {
+          status: 'cancellation_pending',
+          ...(refund && {
+            paymentStatus: refund.amountPaise > 0 ? 'refund_pending' : 'not_refundable',
+            refundAmount: refund.amountPaise / 100
+          })
+        }
+      },
+      { new: true }
+    );
+    if (!claimed) return res.status(409).json({ message: 'This booking is already being processed' });
+
+    if (booking.paymentStatus === 'paid') {
+      if (refund.amountPaise > 0) {
+        const result = await razorpayRequest(`/payments/${encodeURIComponent(booking.razorpayPaymentId)}/refund`, {
+          method: 'POST',
+          body: {
+            amount: refund.amountPaise,
+            notes: { bookingId: booking._id.toString(), reason: 'Guest cancellation' }
+          }
+        });
+        claimed.razorpayRefundId = result.id;
+        claimed.paymentStatus = result.status === 'processed'
+          ? refund.percentage === 100 ? 'refunded' : 'partially_refunded'
+          : 'refund_pending';
+      } else {
+        claimed.paymentStatus = 'not_refundable';
+        claimed.refundAmount = 0;
+      }
+    }
+
+    claimed.status = 'cancelled';
+    await claimed.save();
+    const message = booking.paymentStatus === 'paid'
+      ? claimed.refundAmount
+        ? `Booking cancelled. A ₹${claimed.refundAmount.toLocaleString('en-IN')} refund has been requested.`
+        : 'Booking cancelled. No refund applies within 24 hours of check-in.'
+      : 'Booking cancelled';
+    res.json({ message, booking: claimed });
   } catch (error) {
     next(error);
   }

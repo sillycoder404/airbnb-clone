@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import ListingDetails from './pages/ListingDetails';
+import BookingCheckout from './pages/BookingCheckout';
 import { AuthPage } from './pages/Auth';
 import Trips from './pages/Trips';
 import Wishlist from './pages/Wishlist';
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
         <Route path="/listings/:id" element={<ListingDetails />} />
+        <Route path="/checkout/:id" element={<ProtectedRoute><BookingCheckout /></ProtectedRoute>} />
         <Route path="/login" element={<AuthPage mode="login" />} />
         <Route path="/register" element={<AuthPage mode="register" />} />
         <Route path="/about" element={<InfoPage type="about" />} />

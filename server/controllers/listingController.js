@@ -52,7 +52,10 @@ export async function searchListings(req, res, next) {
       const start = new Date(checkIn);
       const end = new Date(checkOut);
       const conflicts = await Booking.find({
-        status: 'confirmed',
+        $or: [
+          { status: { $in: ['confirmed', 'cancellation_pending'] } },
+          { status: 'pending_payment', paymentExpiresAt: { $gt: new Date() } }
+        ],
         checkIn: { $lt: end },
         checkOut: { $gt: start }
       }).distinct('listing');

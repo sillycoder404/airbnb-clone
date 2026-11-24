@@ -8,6 +8,7 @@ Airbnb Clone is a full-stack, Airbnb-inspired rental marketplace built with Reac
 - Homepage stay carousels grouped by destination, with six stays per city and expanded Gurugram and Dehradun rows
 - Listing details, image galleries, amenities, maps fallback, and reviews
 - JWT registration/login, protected routes, roles, and password hashing
+- Razorpay checkout for UPI and cards, server-verified payments, and partial cancellation refunds
 - Real date-overlap validation and dynamic booking totals
 - My Trips, saved wishlist listings, and host management
 - Host dashboard, listing CRUD, reservations, and listing performance
@@ -47,6 +48,7 @@ cp client/.env.example client/.env
 ```
 
 Set `MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, and optionally `MAPS_API_KEY`.
+For payments, set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and `RAZORPAY_WEBHOOK_SECRET` in `server/.env`.
 
 Start MongoDB locally or create a MongoDB Atlas cluster. For a local MongoDB instance, use:
 
@@ -96,13 +98,22 @@ Development accounts:
 
 These are development-only credentials. Use strong, unique credentials and secrets in production.
 
+## Payments
+
+The checkout uses Razorpay Standard Checkout in INR. Configure UPI and card methods in your Razorpay Dashboard. After deploying the API, add a Razorpay webhook pointing to `/api/payments/webhook` and subscribe to the `payment.captured` event. Copy that webhook's secret into `RAZORPAY_WEBHOOK_SECRET`.
+
+The cancellation policy refunds 75% when cancelled at least 48 hours before check-in, 50% when cancelled 24–48 hours before check-in, and 0% within 24 hours. Refunds are requested through Razorpay; their processing time depends on the provider.
+
+Never put the Razorpay secret or webhook secret in frontend variables, source control, or chat. Start with Razorpay test-mode keys; only switch to live keys after completing a test payment and refund.
+
 ## API Overview
 
 | Area | Endpoints |
 |---|---|
 | Auth | `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me` |
 | Listings | `GET /api/listings`, `GET /api/listings/search`, `GET /api/listings/:id`, CRUD routes |
-| Bookings | `POST /api/bookings`, `GET /api/bookings/my`, `GET /api/bookings/:id`, `DELETE /api/bookings/:id` |
+| Payments | `POST /api/payments/orders`, `POST /api/payments/verify`, `POST /api/payments/webhook` |
+| Bookings | `GET /api/bookings/my`, `GET /api/bookings/:id`, `DELETE /api/bookings/:id` |
 | Host | `GET /api/host/listings`, `GET /api/host/bookings`, `GET /api/host/dashboard` |
 | Reviews | `GET/POST /api/listings/:id/reviews` |
 | Wishlist | `GET /api/wishlist`, `POST/DELETE /api/wishlist/:listingId` |

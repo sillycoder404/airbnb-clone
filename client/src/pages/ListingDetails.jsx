@@ -31,7 +31,6 @@ export default function ListingDetails() {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(1);
-  const [booking, setBooking] = useState(false);
   const [message, setMessage] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
@@ -54,20 +53,14 @@ export default function ListingDetails() {
   const nearbyLandmark = landmarkNamesByListing[listing?.title] || titleLandmark || landmarkNamesByCity[listing?.city] || listing?.city;
   const imageCoverIsLandmark = listing?.images?.[0]?.includes('wikimedia.org');
 
-  const reserve = async () => {
-    if (!user) return navigate('/login', { state: { from: { pathname: `/listings/${id}` } } });
+  const reserve = () => {
     if (!checkIn || !checkOut) return setMessage('Please select check-in and check-out dates');
-    setBooking(true);
+    if (new Date(checkOut) <= new Date(checkIn)) return setMessage('Check-out must be after check-in');
     setMessage('');
-    try {
-      const { data } = await api.post('/bookings', { listingId: id, checkIn, checkOut, guests });
-      setMessage(data.message);
-      setTimeout(() => navigate('/trips'), 900);
-    } catch (err) {
-      setMessage(err.response?.data?.message || 'Unable to complete your booking');
-    } finally {
-      setBooking(false);
-    }
+    const params = new URLSearchParams({ checkIn, checkOut, guests: String(guests) });
+    const checkoutPath = `/checkout/${id}?${params.toString()}`;
+    if (!user) return navigate('/login', { state: { from: { pathname: checkoutPath } } });
+    navigate(checkoutPath);
   };
 
   const submitReview = async (event) => {
@@ -125,8 +118,8 @@ export default function ListingDetails() {
           <label className="guest-field">Guests<select value={guests} onChange={(e) => setGuests(Number(e.target.value))}>{Array.from({ length: listing.maxGuests }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>)}</select></label>
           {nights > 0 && <div className="price-breakdown"><p><span>₹{listing.pricePerNight?.toLocaleString('en-IN')} × {nights} nights</span><span>₹{subtotal.toLocaleString('en-IN')}</span></p><p><span>Cleaning fee</span><span>₹{cleaningFee.toLocaleString('en-IN')}</span></p><p><span>Service fee</span><span>₹{serviceFee.toLocaleString('en-IN')}</span></p><p className="total"><strong>Total</strong><strong>₹{total.toLocaleString('en-IN')}</strong></p></div>}
           {message && <div className="booking-message">{message}</div>}
-          <button className="reserve-button" onClick={reserve} disabled={booking}>{booking ? 'Confirming...' : 'Reserve'}</button>
-          <small>You won't be charged yet</small>
+          <button className="reserve-button" onClick={reserve}>Reserve</button>
+          <small>You'll pay securely on the next step</small>
         </aside>
       </div>
     </main>
