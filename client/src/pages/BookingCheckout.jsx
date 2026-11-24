@@ -137,7 +137,7 @@ export default function BookingCheckout() {
           </label>
           {error && <div className="booking-message" role="alert">{error}</div>}
           <button className="checkout-pay-button" type="submit" disabled={processing || !acceptedTerms}>
-            {processing ? 'Confirming demo booking…' : 'Confirm demo booking'}
+            {processing ? 'Confirming booking…' : 'Confirm booking'}
           </button>
         </form>
 

@@ -16,7 +16,7 @@ export async function getHostBookings(req, res, next) {
     const listings = await Listing.find({ host: req.user._id }).select('_id');
     const ids = listings.map((listing) => listing._id);
     const bookings = await Booking.find({ listing: { $in: ids } })
-      .populate('listing', 'title city images')
+      .populate('listing', 'title city country images')
       .populate('user', 'name email avatar')
       .sort({ createdAt: -1 });
     res.json({ bookings });
@@ -30,10 +30,10 @@ export async function getDashboard(req, res, next) {
     const listings = await Listing.find({ host: req.user._id });
     const ids = listings.map((listing) => listing._id);
     const bookings = await Booking.find({ listing: { $in: ids }, status: 'confirmed' })
-      .populate('listing', 'title city images')
+      .populate('listing', 'title city country images')
       .populate('user', 'name email avatar')
       .sort({ createdAt: -1 });
-    const totalRevenue = bookings.reduce((sum, booking) => sum + booking.totalPrice, 0);
+    const totalBookingValue = bookings.reduce((sum, booking) => sum + booking.totalPrice, 0);
     const averageRating = listings.length
       ? listings.reduce((sum, listing) => sum + listing.rating, 0) / listings.length
       : 0;
@@ -41,7 +41,7 @@ export async function getDashboard(req, res, next) {
       stats: {
         totalListings: listings.length,
         totalReservations: bookings.length,
-        totalRevenue,
+        totalBookingValue,
         averageRating: Number(averageRating.toFixed(1))
       },
       recentReservations: bookings.slice(0, 8),

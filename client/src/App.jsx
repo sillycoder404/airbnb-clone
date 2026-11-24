@@ -10,6 +10,7 @@ import { AuthPage } from './pages/Auth';
 import Trips from './pages/Trips';
 import Wishlist from './pages/Wishlist';
 import HostDashboard from './pages/HostDashboard';
+import HostBookings from './pages/HostBookings';
 import HostListings from './pages/HostListings';
 import ListingForm from './pages/ListingForm';
 import { useAuth } from './context/AuthContext';
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
         <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
         <Route path="/host" element={<ProtectedRoute roles={['HOST','ADMIN']}><HostDashboard /></ProtectedRoute>} />
+        <Route path="/host/bookings" element={<ProtectedRoute roles={['HOST','ADMIN']}><HostBookings /></ProtectedRoute>} />
         <Route path="/host/listings" element={<ProtectedRoute roles={['HOST','ADMIN']}><HostListings /></ProtectedRoute>} />
         <Route path="/host/listings/new" element={<ProtectedRoute roles={['HOST','ADMIN']}><ListingForm /></ProtectedRoute>} />
         <Route path="/host/listings/:id/edit" element={<ProtectedRoute roles={['HOST','ADMIN']}><ListingForm /></ProtectedRoute>} />

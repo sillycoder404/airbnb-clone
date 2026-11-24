@@ -46,7 +46,11 @@ export default function Navbar() {
                   <strong>{user.name}</strong>
                   <Link to="/profile">Profile</Link>
                   <Link to="/trips">My trips</Link>
-                  {user.role === 'HOST' && <Link to="/host/listings">My listings</Link>}
+                  {user.role === 'HOST' && <>
+                    <Link to="/host">Host dashboard</Link>
+                    <Link to="/host/bookings">Reservations</Link>
+                    <Link to="/host/listings">My listings</Link>
+                  </>}
                   <button onClick={logout}>Log out</button>
                 </div>
               </details>

@@ -220,6 +220,9 @@ a { color:inherit; text-decoration:none; }
 .stat-grid span { color:var(--muted); }
 .stat-grid strong { font:800 28px 'Manrope'; }
 .host-panel { border:1px solid var(--line); border-radius:14px; padding:22px; margin-top:22px; }
+.host-panel-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.host-panel-heading a, .table-subtext { color:var(--muted); font-size:12px; }
+.table-subtext { display:block; margin-top:3px; white-space:normal; }
 .table-wrap { overflow-x:auto; }
 table { width:100%; border-collapse:collapse; }
 th, td { text-align:left; padding:12px 8px; border-bottom:1px solid var(--line); white-space:nowrap; }
