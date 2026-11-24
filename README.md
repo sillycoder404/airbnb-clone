@@ -108,6 +108,11 @@ The listing detail page uses a polished approximate-location fallback. To enable
 ## Image Credits
 
 - Hawa Mahal facade image: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:East_facade_of_the_Hawa_Mahal,_Jaipur.jpg), CC0.
+- Hawa Mahal listing cover: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Hawa_Mahal_2011.jpg), by Marcin Białek, CC BY-SA 4.0.
+- Amber Fort listing cover: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Jaipur_03-2016_02_Amber_Fort.jpg), by A.Savin, FAL.
+- Jal Mahal listing cover: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:20191218_Jal_Mahal_Palace_in_Jaipur_1429_9234.jpg), by Jakub Hałun, CC BY-SA 4.0.
+- City Palace listing cover: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Jaipur_03-2016_20_City_Palace_complex.jpg), by A.Savin, FAL.
+- Jaipur destination card: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Jaipur_Jantar_Mantar_panorama_2011.jpg), by Marcin Białek and Aleks G, CC BY-SA 3.0.
 - Bangalore Palace image: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bangalore_Palace_-_Jayamahal.jpg), by Bikashrd, CC BY-SA 4.0.
 - Other destination photos are served from Unsplash.
 

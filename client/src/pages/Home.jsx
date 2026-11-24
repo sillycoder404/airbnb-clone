@@ -11,7 +11,7 @@ const categories = [
 const destinations = [
   { name: 'Goa', landmark: 'Palolem Beach', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=700&q=85' },
   { name: 'Mumbai', landmark: 'Gateway of India', image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=700&q=85' },
-  { name: 'Jaipur', landmark: 'Hawa Mahal', image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/East_facade_of_the_Hawa_Mahal%2C_Jaipur.jpg/1280px-East_facade_of_the_Hawa_Mahal%2C_Jaipur.jpg' },
+  { name: 'Jaipur', landmark: 'Jantar Mantar', image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Jaipur_Jantar_Mantar_panorama_2011.jpg/1280px-Jaipur_Jantar_Mantar_panorama_2011.jpg' },
   { name: 'Manali', landmark: 'Himalayan peaks', image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=700&q=85' },
   { name: 'Bengaluru', landmark: 'Bangalore Palace', image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Bangalore_Palace_-_Jayamahal.jpg/1280px-Bangalore_Palace_-_Jayamahal.jpg' },
   { name: 'Delhi', landmark: 'India Gate', image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=700&q=85' },

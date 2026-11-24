@@ -39,10 +39,30 @@ const landmarkPhotos = {
   London: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=85'
 };
 
+const jaipurStayCovers = {
+  hawa: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Hawa_Mahal_2011.jpg/1280px-Hawa_Mahal_2011.jpg',
+  amber: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Jaipur_03-2016_02_Amber_Fort.jpg/1280px-Jaipur_03-2016_02_Amber_Fort.jpg',
+  jal: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/20191218_Jal_Mahal_Palace_in_Jaipur_1429_9234.jpg/1280px-20191218_Jal_Mahal_Palace_in_Jaipur_1429_9234.jpg',
+  cityPalace: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/Jaipur_03-2016_20_City_Palace_complex.jpg/1280px-Jaipur_03-2016_20_City_Palace_complex.jpg'
+};
+
+const coordinatesByCity = {
+  Goa: { lat: 15.2993, lng: 73.8243 },
+  Mumbai: { lat: 19.076, lng: 72.8777 },
+  Jaipur: { lat: 26.9124, lng: 75.7873 },
+  Manali: { lat: 32.2396, lng: 77.1887 },
+  Bengaluru: { lat: 12.9716, lng: 77.5946 },
+  Delhi: { lat: 28.6139, lng: 77.209 },
+  Bali: { lat: -8.4095, lng: 115.1889 },
+  Dubai: { lat: 25.2048, lng: 55.2708 },
+  Paris: { lat: 48.8566, lng: 2.3522 },
+  London: { lat: 51.5072, lng: -0.1276 }
+};
+
 const listingTemplates = [
   ['Oceanfront villa in Goa', 'Goa', 'India', 'Villa', 'beach', 18000],
   ['Sea-view apartment in Mumbai', 'Mumbai', 'India', 'Apartment', 'beach', 9200],
-  ['Heritage haveli in Jaipur', 'Jaipur', 'India', 'House', 'desert', 7600],
+  ['Heritage haveli in Jaipur', 'Jaipur', 'India', 'House', 'desert', 7600, 'hawa'],
   ['Glass cabin in Manali', 'Manali', 'India', 'Cabin', 'mountain', 6800],
   ['Modern loft in Bengaluru', 'Bengaluru', 'India', 'Apartment', 'city', 6100],
   ['Design home in Delhi', 'Delhi', 'India', 'House', 'city', 8200],
@@ -54,10 +74,12 @@ const listingTemplates = [
   ['Mountain chalet in Manali', 'Manali', 'India', 'Cabin', 'mountain', 9800],
   ['Beach bungalow in Bali', 'Bali', 'Indonesia', 'Cottage', 'beach', 8500],
   ['Penthouse in Mumbai', 'Mumbai', 'India', 'Apartment', 'city', 28000],
-  ['Courtyard villa in Jaipur', 'Jaipur', 'India', 'Villa', 'desert', 12000],
+  ['Courtyard villa in Jaipur', 'Jaipur', 'India', 'Villa', 'desert', 12000, 'amber'],
   ['Boutique room in Delhi', 'Delhi', 'India', 'Room', 'city', 4200],
   ['Lagoon villa in Dubai', 'Dubai', 'UAE', 'Villa', 'desert', 32000],
-  ['Garden retreat in Bengaluru', 'Bengaluru', 'India', 'House', 'mountain', 7200]
+  ['Garden retreat in Bengaluru', 'Bengaluru', 'India', 'House', 'mountain', 7200],
+  ['Jal Mahal lakeside retreat', 'Jaipur', 'India', 'House', 'desert', 8900, 'jal'],
+  ['City Palace rooftop haveli', 'Jaipur', 'India', 'Apartment', 'desert', 10400, 'cityPalace']
 ];
 
 async function seed() {
@@ -74,22 +96,19 @@ async function seed() {
     { name: 'Airbnb Clone Admin', email: 'admin@staynest.com', password: 'Admin123!', role: 'ADMIN', avatar: 'https://i.pravatar.cc/150?img=5' }
   ]);
 
-  const hostIds = [users[2]._id, users[3]._id];
+  const hostIds = [users[4]._id, users[5]._id];
   const listings = await Listing.insertMany(listingTemplates.map((template, index) => {
-    const [title, city, country, propertyType, imageKind, price] = template;
+    const [title, city, country, propertyType, imageKind, price, coverPhotoKey] = template;
     return {
       title,
       description: `A thoughtfully designed ${propertyType.toLowerCase()} with warm interiors, modern comforts, and everything you need for an effortless stay in ${city}.`,
       location: `${city} city area`,
       city,
       country,
-      coordinates: {
-        lat: [15.2993, 19.076, 26.9124, 32.2396, 12.9716, 28.6139, -8.4095, 25.2048, 48.8566, 51.5072][index % 10],
-        lng: [73.8243, 72.8777, 75.7873, 77.1887, 77.5946, 77.209, 115.1889, 55.2708, 2.3522, -0.1276][index % 10]
-      },
+      coordinates: coordinatesByCity[city],
       pricePerNight: price,
       images: [
-        images[imageKind][0],
+        jaipurStayCovers[coverPhotoKey] || images[imageKind][0],
         landmarkPhotos[city],
         images[imageKind][1]
       ],
