@@ -79,6 +79,39 @@ const cityStayCovers = {
   'dehradun-8': 'https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=1200&q=85'
 };
 
+const destinationStayPhotos = {
+  'goa-basilica': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Basilica_of_Bom_Jesus_and_vehicles_parked_infront.jpg/1280px-Basilica_of_Bom_Jesus_and_vehicles_parked_infront.jpg',
+  'goa-aguada': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Aguada_Fort_Top_View%2C_North_Goa.jpg/1280px-Aguada_Fort_Top_View%2C_North_Goa.jpg',
+  'goa-dudhsagar': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Dudhsagar_Falls%2C_Goa_%2851821730751%29.jpg/1280px-Dudhsagar_Falls%2C_Goa_%2851821730751%29.jpg',
+  'mumbai-marine-drive': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Marine_Drive_Mumbai.jpg/1280px-Marine_Drive_Mumbai.jpg',
+  'mumbai-cst': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Chhatrapati_Shivaji_Terminus_%28Victoria_Terminus%29.jpg/1280px-Chhatrapati_Shivaji_Terminus_%28Victoria_Terminus%29.jpg',
+  'mumbai-elephanta': 'https://upload.wikimedia.org/wikipedia/commons/3/3f/A_pillar_in_Cave_1%2C_Elephanta_Great_Cave_Mumbai.jpg',
+  'manali-hidimba': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Hidimba_Devi_Temple%2C_Dhungri_Manali.jpg/1280px-Hidimba_Devi_Temple%2C_Dhungri_Manali.jpg',
+  'manali-solang': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/A_view_of_solang_valley_on_the_way_to_rohtang_pass.jpg/1280px-A_view_of_solang_valley_on_the_way_to_rohtang_pass.jpg',
+  'manali-rohtang': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Manali_to_Rohtang_Pass_01.jpg/1280px-Manali_to_Rohtang_Pass_01.jpg',
+  'bengaluru-lalbagh': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Lalbagh_%28Lal_Baugh%29_Botanical_Garden_in_Bangalore_%28now_Bengaluru%29_1.jpg/1280px-Lalbagh_%28Lal_Baugh%29_Botanical_Garden_in_Bangalore_%28now_Bengaluru%29_1.jpg',
+  'bengaluru-vidhana': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Gate_3_%28East%29%2C_Vidhana_Soudha_%2801%29.jpg/1280px-Gate_3_%28East%29%2C_Vidhana_Soudha_%2801%29.jpg',
+  'bengaluru-cubbon': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Band-Stand-Cubbon-Park-Bengaluru-karnataka-India.jpg/1280px-Band-Stand-Cubbon-Park-Bengaluru-karnataka-India.jpg',
+  'delhi-red-fort': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/20191203_Moti_Masjid%2C_Red_Fort%2C_Delhi_0502_6354_DxO.jpg/1280px-20191203_Moti_Masjid%2C_Red_Fort%2C_Delhi_0502_6354_DxO.jpg',
+  'delhi-qutub': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Qutb_Minar_2011.jpg/1280px-Qutb_Minar_2011.jpg',
+  'delhi-humayun': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/A_unique_frame_of_Humayun_Tomb%2C_Delhi.jpg/1280px-A_unique_frame_of_Humayun_Tomb%2C_Delhi.jpg',
+  'bali-uluwatu': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Kuta_Bali_Indonesia_Pura-Luhur-Uluwatu-03.jpg/1280px-Kuta_Bali_Indonesia_Pura-Luhur-Uluwatu-03.jpg',
+  'bali-tanah-lot': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Pura_Tanah_Lot%2C_Bali%2C_Indonesia%2C_20220827_1007_1147.jpg/1280px-Pura_Tanah_Lot%2C_Bali%2C_Indonesia%2C_20220827_1007_1147.jpg',
+  'bali-tegallalang': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Rice_terraces%2C_Bali.jpg/1280px-Rice_terraces%2C_Bali.jpg',
+  'dubai-palm': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Artificial_Archipelagos%2C_Dubai%2C_United_Arab_Emirates_ISS022-E-024940_lrg.jpg/1280px-Artificial_Archipelagos%2C_Dubai%2C_United_Arab_Emirates_ISS022-E-024940_lrg.jpg',
+  'dubai-museum': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Museum_of_the_Future_Audi_Etron-Dubai_UAE-Andres_Larin.jpg/1280px-Museum_of_the_Future_Audi_Etron-Dubai_UAE-Andres_Larin.jpg',
+  'dubai-marina': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Dubai_Marina_04.jpg/1280px-Dubai_Marina_04.jpg',
+  'paris-louvre': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Cour_Napol%C3%A9on_%28Flickr%2C_Stavros_A%29.jpg/1280px-Cour_Napol%C3%A9on_%28Flickr%2C_Stavros_A%29.jpg',
+  'paris-notre-dame': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Cath%C3%A9drale_Notre_Dame%2C_Paris_30_September_2015.jpg/1280px-Cath%C3%A9drale_Notre_Dame%2C_Paris_30_September_2015.jpg',
+  'paris-arc': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Arc_Triomphe.jpg/1280px-Arc_Triomphe.jpg',
+  'paris-sacre-coeur': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Basilique_du_Sacr%C3%A9-C%C5%93ur_de_Montmartre_-_Paris_-_GT-01_-_2024.jpg/1280px-Basilique_du_Sacr%C3%A9-C%C5%93ur_de_Montmartre_-_Paris_-_GT-01_-_2024.jpg',
+  'london-big-ben': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Big_Ben_Elizabeth_Tower_London_2023_01.jpg/1280px-Big_Ben_Elizabeth_Tower_London_2023_01.jpg',
+  'london-buckingham': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Buckingham_Palace%2C_London_-_April_2009.jpg/1280px-Buckingham_Palace%2C_London_-_April_2009.jpg',
+  'london-eye': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/London_Eye_Twilight_April_2006.jpg/1280px-London_Eye_Twilight_April_2006.jpg',
+  'london-st-pauls': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Cath%C3%A9drale_St-Paul_-_coupole.jpg/1280px-Cath%C3%A9drale_St-Paul_-_coupole.jpg',
+  'jaipur-jantar': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/20191218_Jantar_Mantar%2C_Jaipur_0906_8983_DxO.jpg/1280px-20191218_Jantar_Mantar%2C_Jaipur_0906_8983_DxO.jpg'
+};
+
 const coordinatesByCity = {
   Goa: { lat: 15.2993, lng: 73.8243 },
   Mumbai: { lat: 19.076, lng: 72.8777 },
@@ -130,7 +163,37 @@ const listingTemplates = [
   ['Riverside home in Dehradun', 'Dehradun', 'India', 'House', 'mountain', 9100, 'dehradun-5'],
   ['Quiet villa near Mussoorie Road', 'Dehradun', 'India', 'Villa', 'mountain', 11600, 'dehradun-6'],
   ['Cedar cottage in Dehradun', 'Dehradun', 'India', 'Cottage', 'mountain', 7800, 'dehradun-7'],
-  ['Panoramic villa in Dehradun', 'Dehradun', 'India', 'Villa', 'mountain', 13400, 'dehradun-8']
+  ['Panoramic villa in Dehradun', 'Dehradun', 'India', 'Villa', 'mountain', 13400, 'dehradun-8'],
+  ['Old Goa stay near Basilica of Bom Jesus', 'Goa', 'India', 'Apartment', 'city', 9700, 'goa-basilica'],
+  ['Beach home near Fort Aguada', 'Goa', 'India', 'Villa', 'beach', 12200, 'goa-aguada'],
+  ['Nature retreat near Dudhsagar Falls', 'Goa', 'India', 'Cottage', 'mountain', 7600, 'goa-dudhsagar'],
+  ['Sea-view flat near Marine Drive', 'Mumbai', 'India', 'Apartment', 'city', 14500, 'mumbai-marine-drive'],
+  ['Heritage stay near Chhatrapati Shivaji Terminus', 'Mumbai', 'India', 'Apartment', 'city', 11200, 'mumbai-cst'],
+  ['Home near Elephanta Caves', 'Mumbai', 'India', 'House', 'beach', 8800, 'mumbai-elephanta'],
+  ['Woodland stay near Hidimba Devi Temple', 'Manali', 'India', 'Cottage', 'mountain', 7600, 'manali-hidimba'],
+  ['Mountain retreat near Solang Valley', 'Manali', 'India', 'Cabin', 'mountain', 8600, 'manali-solang'],
+  ['Alpine home near Rohtang Pass', 'Manali', 'India', 'Cabin', 'mountain', 9900, 'manali-rohtang'],
+  ['Garden home near Lalbagh Botanical Garden', 'Bengaluru', 'India', 'House', 'city', 7200, 'bengaluru-lalbagh'],
+  ['City flat near Vidhana Soudha', 'Bengaluru', 'India', 'Apartment', 'city', 8400, 'bengaluru-vidhana'],
+  ['Parkside stay near Cubbon Park', 'Bengaluru', 'India', 'Cottage', 'city', 7800, 'bengaluru-cubbon'],
+  ['Heritage stay near Red Fort', 'Delhi', 'India', 'Apartment', 'city', 9300, 'delhi-red-fort'],
+  ['Apartment near Qutub Minar', 'Delhi', 'India', 'Apartment', 'city', 8700, 'delhi-qutub'],
+  ["Courtyard home near Humayun's Tomb", 'Delhi', 'India', 'House', 'city', 10200, 'delhi-humayun'],
+  ['Ocean villa near Uluwatu Temple', 'Bali', 'Indonesia', 'Villa', 'beach', 16000, 'bali-uluwatu'],
+  ['Island home near Tanah Lot', 'Bali', 'Indonesia', 'House', 'beach', 12800, 'bali-tanah-lot'],
+  ['Rice terrace retreat near Tegallalang', 'Bali', 'Indonesia', 'Resort', 'mountain', 15200, 'bali-tegallalang'],
+  ['Skyline apartment near Palm Jumeirah', 'Dubai', 'UAE', 'Apartment', 'city', 18500, 'dubai-palm'],
+  ['Modern suite near Museum of the Future', 'Dubai', 'UAE', 'Apartment', 'city', 21000, 'dubai-museum'],
+  ['Marina-view home near Dubai Marina', 'Dubai', 'UAE', 'House', 'city', 17000, 'dubai-marina'],
+  ['Paris home near the Louvre Museum', 'Paris', 'France', 'Apartment', 'city', 18000, 'paris-louvre'],
+  ['Quiet apartment near Notre-Dame Cathedral', 'Paris', 'France', 'Apartment', 'city', 16500, 'paris-notre-dame'],
+  ['Suite near the Arc de Triomphe', 'Paris', 'France', 'Apartment', 'city', 19500, 'paris-arc'],
+  ['Studio near Sacré-Cœur', 'Paris', 'France', 'Apartment', 'city', 14500, 'paris-sacre-coeur'],
+  ['City flat near Big Ben', 'London', 'United Kingdom', 'Apartment', 'city', 19800, 'london-big-ben'],
+  ['Townhouse near Buckingham Palace', 'London', 'United Kingdom', 'House', 'city', 22500, 'london-buckingham'],
+  ['River-view stay near the London Eye', 'London', 'United Kingdom', 'Apartment', 'city', 20500, 'london-eye'],
+  ["Heritage home near St Paul's Cathedral", 'London', 'United Kingdom', 'House', 'city', 21400, 'london-st-pauls'],
+  ['Rooftop stay near Jantar Mantar', 'Jaipur', 'India', 'Apartment', 'desert', 9800, 'jaipur-jantar']
 ];
 
 async function seed() {
@@ -150,17 +213,18 @@ async function seed() {
   const hostIds = [users[4]._id, users[5]._id];
   const listings = await Listing.insertMany(listingTemplates.map((template, index) => {
     const [title, city, country, propertyType, imageKind, price, coverPhotoKey] = template;
+    const nearbyLandmark = title.match(/\b(?:near|by)\s+(.+)$/i)?.[1];
     return {
       title,
-      description: `A thoughtfully designed ${propertyType.toLowerCase()} with warm interiors, modern comforts, and everything you need for an effortless stay in ${city}.`,
-      location: `${city} city area`,
+      description: `A thoughtfully designed ${propertyType.toLowerCase()} with warm interiors and modern comforts${nearbyLandmark ? ` near ${nearbyLandmark}, a favorite place to explore in ${city}` : ` for an effortless stay in ${city}`}.`,
+      location: nearbyLandmark ? `near ${nearbyLandmark}` : `${city} city area`,
       city,
       country,
       coordinates: coordinatesByCity[city],
       pricePerNight: price,
       images: [
-        jaipurStayCovers[coverPhotoKey] || cityStayCovers[coverPhotoKey] || images[imageKind][0],
-        jaipurStayLandmarks[coverPhotoKey] || landmarkPhotos[city] || images[imageKind][0],
+        jaipurStayCovers[coverPhotoKey] || cityStayCovers[coverPhotoKey] || destinationStayPhotos[coverPhotoKey] || images[imageKind][0],
+        jaipurStayLandmarks[coverPhotoKey] || (destinationStayPhotos[coverPhotoKey] ? images[imageKind][0] : landmarkPhotos[city] || images[imageKind][0]),
         jaipurStayGalleryHomes[coverPhotoKey] || images[imageKind][1]
       ],
       propertyType,

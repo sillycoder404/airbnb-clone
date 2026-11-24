@@ -50,7 +50,9 @@ export default function ListingDetails() {
   const cleaningFee = listing?.cleaningFee || 0;
   const serviceFee = Math.round(subtotal * 0.1);
   const total = subtotal + cleaningFee + serviceFee;
-  const nearbyLandmark = landmarkNamesByListing[listing?.title] || landmarkNamesByCity[listing?.city] || listing?.city;
+  const titleLandmark = listing?.title?.match(/\b(?:near|by)\s+(.+)$/i)?.[1];
+  const nearbyLandmark = landmarkNamesByListing[listing?.title] || titleLandmark || landmarkNamesByCity[listing?.city] || listing?.city;
+  const imageCoverIsLandmark = listing?.images?.[0]?.includes('wikimedia.org');
 
   const reserve = async () => {
     if (!user) return navigate('/login', { state: { from: { pathname: `/listings/${id}` } } });
@@ -93,7 +95,7 @@ export default function ListingDetails() {
       <h1>{listing.title}</h1>
       <div className="detail-location"><span><MapPin size={16} /> {listing.location}, {listing.city}, {listing.country}</span><span><Star size={16} fill="currentColor" /> {listing.rating?.toFixed(1)} · {listing.reviewCount} reviews</span></div>
       <div className="gallery">
-        {listing.images?.slice(0, 5).map((image, index) => <img key={image} className={index === 0 ? 'main-image' : ''} src={image} alt={index === 1 ? `${nearbyLandmark} near ${listing.city}` : `${listing.title} view ${index + 1}`} />)}
+        {listing.images?.slice(0, 5).map((image, index) => <img key={image} className={index === 0 ? 'main-image' : ''} src={image} alt={index === 0 && imageCoverIsLandmark ? `${nearbyLandmark}, ${listing.city}` : index === 1 && !imageCoverIsLandmark ? `${nearbyLandmark} near ${listing.city}` : `${listing.title} view ${index + 1}`} />)}
       </div>
       <div className="detail-layout">
         <section className="detail-main">

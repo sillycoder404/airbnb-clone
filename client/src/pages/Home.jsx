@@ -91,7 +91,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/listings?limit=50')
+    api.get('/listings/search')
       .then(({ data }) => setListings(data.listings))
       .catch(() => setError('We could not load stays. Please check that the backend is running.'))
       .finally(() => setLoading(false));
