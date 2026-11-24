@@ -31,6 +31,7 @@ export default function ListingCard({ listing }) {
           alt={listing.title}
           onError={() => setImageFailed(true)}
         />
+        {listing.rating >= 4.8 && <span className="guest-favorite">Guest favourite</span>}
         <button className={`heart ${saved ? 'saved' : ''}`} onClick={toggleSaved} aria-label={saved ? 'Remove from wishlist' : 'Save listing'}>
           <Heart size={20} fill={saved ? 'currentColor' : 'none'} />
         </button>

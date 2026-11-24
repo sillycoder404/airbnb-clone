@@ -5,6 +5,7 @@ Airbnb Clone is a full-stack, Airbnb-inspired rental marketplace built with Reac
 ## Features
 
 - Destination search, filtering, sorting, and availability-aware results
+- Homepage stay carousels grouped by destination, including Gurugram and Dehradun demo listings
 - Listing details, image galleries, amenities, maps fallback, and reviews
 - JWT registration/login, protected routes, roles, and password hashing
 - Real date-overlap validation and dynamic booking totals

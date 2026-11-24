@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, ShieldCheck, Sparkles, CalendarDays } from 'lucide-react';
 import api from '../services/api';
@@ -21,25 +21,66 @@ const destinations = [
   { name: 'London', landmark: 'Tower Bridge', image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=700&q=85' }
 ];
 
-function pickFeaturedListings(listings, limit = 8) {
-  const ranked = [...listings].sort((a, b) =>
-    (b.rating || 0) - (a.rating || 0) || (b.reviewCount || 0) - (a.reviewCount || 0)
+const cityOrder = ['Delhi', 'Gurugram', 'Dehradun', 'Jaipur', 'Goa', 'Mumbai', 'Manali', 'Bengaluru', 'Bali', 'Dubai'];
+
+function groupListingsByCity(listings) {
+  const grouped = listings.reduce((groups, listing) => {
+    const city = listing.city?.trim();
+    if (city) groups.set(city, [...(groups.get(city) || []), listing]);
+    return groups;
+  }, new Map());
+
+  const orderedCities = [
+    ...cityOrder.filter((city) => grouped.has(city)),
+    ...[...grouped.keys()].filter((city) => !cityOrder.includes(city)).sort()
+  ];
+
+  return orderedCities
+    .map((city) => ({
+      city,
+      listings: grouped.get(city).sort((a, b) =>
+        (b.rating || 0) - (a.rating || 0) || (b.reviewCount || 0) - (a.reviewCount || 0)
+      )
+    }))
+    .filter(({ listings: cityListings }) => cityListings.length >= 4);
+}
+
+function CityStaySection({ city, listings, loading, onExplore }) {
+  const carouselRef = useRef(null);
+  const heading = city === 'Delhi'
+    ? 'Available in Delhi this weekend'
+    : city === 'Dehradun'
+      ? 'Available in Dehradun this weekend'
+      : city === 'Gurugram'
+        ? 'Stay in Gurugram'
+        : `Popular homes in ${city}`;
+
+  const scrollCarousel = (direction) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const card = carousel.querySelector('.listing-card');
+    carousel.scrollBy({ left: direction * (card?.getBoundingClientRect().width || 240) * 2, behavior: 'smooth' });
+  };
+
+  return (
+    <section className="city-stays-section">
+      <div className="city-stays-heading">
+        <div className="city-title">
+          <h2>{heading}</h2>
+          <button onClick={() => onExplore(city)} aria-label={`Explore stays in ${city}`}>→</button>
+        </div>
+        <div className="carousel-controls">
+          <button onClick={() => scrollCarousel(-1)} aria-label={`Scroll ${city} stays left`}>‹</button>
+          <button onClick={() => scrollCarousel(1)} aria-label={`Scroll ${city} stays right`}>›</button>
+        </div>
+      </div>
+      {loading
+        ? <div className="stay-carousel">{[1, 2, 3, 4, 5, 6].map((n) => <div className="skeleton-card" key={n} />)}</div>
+        : <div className="stay-carousel" ref={carouselRef}>
+          {listings.map((listing) => <ListingCard key={listing._id} listing={listing} />)}
+        </div>}
+    </section>
   );
-  const featured = [];
-  const otherStays = [];
-  const seenCities = new Set();
-
-  ranked.forEach((listing) => {
-    const city = listing.city?.trim().toLowerCase();
-    if (city && !seenCities.has(city)) {
-      seenCities.add(city);
-      featured.push(listing);
-    } else {
-      otherStays.push(listing);
-    }
-  });
-
-  return [...featured, ...otherStays].slice(0, limit);
 }
 
 export default function Home() {
@@ -51,10 +92,15 @@ export default function Home() {
 
   useEffect(() => {
     api.get('/listings?limit=50')
-      .then(({ data }) => setListings(pickFeaturedListings(data.listings)))
+      .then(({ data }) => setListings(data.listings))
       .catch(() => setError('We could not load stays. Please check that the backend is running.'))
       .finally(() => setLoading(false));
   }, []);
+  const citySections = listings.length
+    ? groupListingsByCity(listings)
+    : loading
+      ? cityOrder.slice(1, 3).map((city) => ({ city, listings: [] }))
+      : [];
 
   const submitSearch = (event) => {
     event.preventDefault();
@@ -65,11 +111,17 @@ export default function Home() {
 
   return (
     <main>
-      <section className="hero">
-        <div className="hero-overlay" />
+      <section className="categories">
+        {categories.map(([name, icon]) => (
+          <button key={name} onClick={() => navigate(`/search?destination=${name === 'Beach' ? 'Goa' : name === 'Mountains' ? 'Manali' : ''}`)}>
+            <span>{icon}</span>{name}
+          </button>
+        ))}
+      </section>
+
+      <section className="hero home-search">
         <div className="hero-content">
-          <p className="eyebrow">Find your next favorite place</p>
-          <h1>Find a place you'll<br />love to stay</h1>
+          <h1 className="sr-only">Find a place you'll love to stay</h1>
           <form className="hero-search" onSubmit={submitSearch}>
             <label><span>Destination</span><input value={form.destination} onChange={(e) => setForm({ ...form, destination: e.target.value })} placeholder="Where to?" /></label>
             <label><span>Check in</span><input type="date" value={form.checkIn} onChange={(e) => setForm({ ...form, checkIn: e.target.value })} /></label>
@@ -80,27 +132,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="categories">
-        {categories.map(([name, icon]) => (
-          <button key={name} onClick={() => navigate(`/search?destination=${name === 'Beach' ? 'Goa' : name === 'Mountains' ? 'Manali' : ''}`)}>
-            <span>{icon}</span>{name}
-          </button>
+      {error ? <div className="error-state home-error">{error}</div>
+        : citySections.map(({ city, listings: cityListings }) => (
+          <CityStaySection key={city} city={city} listings={cityListings} loading={loading} onExplore={(destination) => navigate(`/search?destination=${encodeURIComponent(destination)}`)} />
         ))}
-      </section>
-
-      <section className="section">
-        <div className="section-heading featured-heading">
-          <div>
-            <p className="eyebrow">Handpicked for you</p>
-            <h2>Stay somewhere memorable</h2>
-            <p className="section-description">A curated mix of guest-loved places across different destinations.</p>
-          </div>
-          <button className="featured-action" onClick={() => navigate('/search')}>Explore all stays <span aria-hidden="true">→</span></button>
-        </div>
-        {loading ? <div className="listing-grid">{[1,2,3,4].map(n => <div className="skeleton-card" key={n} />)}</div>
-          : error ? <div className="error-state">{error}</div>
-          : <div className="listing-grid">{listings.map(listing => <ListingCard key={listing._id} listing={listing} />)}</div>}
-      </section>
 
       <section className="section destination-section">
         <div className="section-heading"><div><p className="eyebrow">Explore somewhere new</p><h2>Popular destinations</h2></div></div>

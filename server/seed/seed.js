@@ -60,6 +60,25 @@ const jaipurStayGalleryHomes = {
   cityPalace: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85'
 };
 
+const cityStayCovers = {
+  'gurugram-1': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
+  'gurugram-2': 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=85',
+  'gurugram-3': 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=85',
+  'gurugram-4': 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1200&q=85',
+  'gurugram-5': 'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=85',
+  'gurugram-6': 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85',
+  'gurugram-7': 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=85',
+  'gurugram-8': 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-1': 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-2': 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-3': 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-4': 'https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-5': 'https://images.unsplash.com/photo-1600047509782-20d39509f26d?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-6': 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-7': 'https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=1200&q=85',
+  'dehradun-8': 'https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=1200&q=85'
+};
+
 const coordinatesByCity = {
   Goa: { lat: 15.2993, lng: 73.8243 },
   Mumbai: { lat: 19.076, lng: 72.8777 },
@@ -70,7 +89,9 @@ const coordinatesByCity = {
   Bali: { lat: -8.4095, lng: 115.1889 },
   Dubai: { lat: 25.2048, lng: 55.2708 },
   Paris: { lat: 48.8566, lng: 2.3522 },
-  London: { lat: 51.5072, lng: -0.1276 }
+  London: { lat: 51.5072, lng: -0.1276 },
+  Gurugram: { lat: 28.4595, lng: 77.0266 },
+  Dehradun: { lat: 30.3165, lng: 78.0322 }
 };
 
 const listingTemplates = [
@@ -93,7 +114,23 @@ const listingTemplates = [
   ['Lagoon villa in Dubai', 'Dubai', 'UAE', 'Villa', 'desert', 32000],
   ['Garden retreat in Bengaluru', 'Bengaluru', 'India', 'House', 'mountain', 7200],
   ['Jal Mahal lakeside retreat', 'Jaipur', 'India', 'House', 'desert', 8900, 'jal'],
-  ['City Palace rooftop haveli', 'Jaipur', 'India', 'Apartment', 'desert', 10400, 'cityPalace']
+  ['City Palace rooftop haveli', 'Jaipur', 'India', 'Apartment', 'desert', 10400, 'cityPalace'],
+  ['Garden apartment in Gurugram', 'Gurugram', 'India', 'Apartment', 'city', 7800, 'gurugram-1'],
+  ['Farm stay near Gurugram', 'Gurugram', 'India', 'House', 'city', 12500, 'gurugram-2'],
+  ['Modern home in Gurugram', 'Gurugram', 'India', 'House', 'city', 9600, 'gurugram-3'],
+  ['Bright flat near Cyber City', 'Gurugram', 'India', 'Apartment', 'city', 6800, 'gurugram-4'],
+  ['Private villa in Gurugram', 'Gurugram', 'India', 'Villa', 'city', 16200, 'gurugram-5'],
+  ['Poolside retreat in Gurugram', 'Gurugram', 'India', 'Villa', 'city', 14800, 'gurugram-6'],
+  ['Guest suite near Cyber Hub', 'Gurugram', 'India', 'Apartment', 'city', 8800, 'gurugram-7'],
+  ['Rooftop home in Gurugram', 'Gurugram', 'India', 'Apartment', 'city', 10500, 'gurugram-8'],
+  ['Mountain-view stay in Dehradun', 'Dehradun', 'India', 'Cottage', 'mountain', 7200, 'dehradun-1'],
+  ['Hillside cottage in Dehradun', 'Dehradun', 'India', 'Cottage', 'mountain', 8400, 'dehradun-2'],
+  ['Garden bungalow in Dehradun', 'Dehradun', 'India', 'House', 'mountain', 6900, 'dehradun-3'],
+  ['Forest-edge cabin in Dehradun', 'Dehradun', 'India', 'Cabin', 'mountain', 7600, 'dehradun-4'],
+  ['Riverside home in Dehradun', 'Dehradun', 'India', 'House', 'mountain', 9100, 'dehradun-5'],
+  ['Quiet villa near Mussoorie Road', 'Dehradun', 'India', 'Villa', 'mountain', 11600, 'dehradun-6'],
+  ['Cedar cottage in Dehradun', 'Dehradun', 'India', 'Cottage', 'mountain', 7800, 'dehradun-7'],
+  ['Panoramic villa in Dehradun', 'Dehradun', 'India', 'Villa', 'mountain', 13400, 'dehradun-8']
 ];
 
 async function seed() {
@@ -122,8 +159,8 @@ async function seed() {
       coordinates: coordinatesByCity[city],
       pricePerNight: price,
       images: [
-        jaipurStayCovers[coverPhotoKey] || images[imageKind][0],
-        jaipurStayLandmarks[coverPhotoKey] || landmarkPhotos[city],
+        jaipurStayCovers[coverPhotoKey] || cityStayCovers[coverPhotoKey] || images[imageKind][0],
+        jaipurStayLandmarks[coverPhotoKey] || landmarkPhotos[city] || images[imageKind][0],
         jaipurStayGalleryHomes[coverPhotoKey] || images[imageKind][1]
       ],
       propertyType,
@@ -133,7 +170,7 @@ async function seed() {
       amenities: ['Wi-Fi', 'Air conditioning', 'Kitchen', 'Workspace', 'Pool'].slice(0, 3 + (index % 3)),
       maxGuests: 2 + (index % 5),
       host: hostIds[index % hostIds.length],
-      rating: index === 0 ? 4.7 : 4.2 + (index % 8) / 10,
+      rating: index >= 20 ? 4.8 + (index % 3) / 10 : index === 0 ? 4.7 : 4.2 + (index % 8) / 10,
       reviewCount: index === 0 ? 3 : 8 + (index % 40),
       cleaningFee: 600 + (index % 4) * 150,
       instantBooking: index % 3 !== 0
