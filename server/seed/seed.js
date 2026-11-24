@@ -26,6 +26,19 @@ const images = {
   ]
 };
 
+const landmarkPhotos = {
+  Goa: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=85',
+  Mumbai: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=1200&q=85',
+  Jaipur: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/East_facade_of_the_Hawa_Mahal%2C_Jaipur.jpg/1280px-East_facade_of_the_Hawa_Mahal%2C_Jaipur.jpg',
+  Manali: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=85',
+  Bengaluru: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Bangalore_Palace_-_Jayamahal.jpg/1280px-Bangalore_Palace_-_Jayamahal.jpg',
+  Delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=85',
+  Bali: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=85',
+  Dubai: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85',
+  Paris: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=85',
+  London: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=85'
+};
+
 const listingTemplates = [
   ['Oceanfront villa in Goa', 'Goa', 'India', 'Villa', 'beach', 18000],
   ['Sea-view apartment in Mumbai', 'Mumbai', 'India', 'Apartment', 'beach', 9200],
@@ -77,8 +90,8 @@ async function seed() {
       pricePerNight: price,
       images: [
         images[imageKind][0],
-        images[imageKind][1],
-        images.city[0]
+        landmarkPhotos[city],
+        images[imageKind][1]
       ],
       propertyType,
       bedrooms: 1 + (index % 4),

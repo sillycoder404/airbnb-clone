@@ -105,6 +105,12 @@ These are development-only credentials. Use strong, unique credentials and secre
 
 The listing detail page uses a polished approximate-location fallback. To enable a real map, set `MAPS_API_KEY` and integrate a supported map provider in the listing detail map panel. The key must remain server-only or be exposed to a provider through the provider's explicitly public frontend key mechanism.
 
+## Image Credits
+
+- Hawa Mahal facade image: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:East_facade_of_the_Hawa_Mahal,_Jaipur.jpg), CC0.
+- Bangalore Palace image: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bangalore_Palace_-_Jayamahal.jpg), by Bikashrd, CC BY-SA 4.0.
+- Other destination photos are served from Unsplash.
+
 ## Deployment
 
 - Frontend: Vercel or Netlify; set `VITE_API_URL` to the deployed API URL.

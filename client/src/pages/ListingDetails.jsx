@@ -4,6 +4,19 @@ import { Heart, Star, MapPin, Users, BedDouble, Bath, CalendarDays } from 'lucid
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
+const landmarkNames = {
+  Goa: 'Goa beach',
+  Mumbai: 'Gateway of India',
+  Jaipur: 'Hawa Mahal',
+  Manali: 'Himalayan peaks',
+  Bengaluru: 'Bangalore Palace',
+  Delhi: 'India Gate',
+  Bali: 'Ulun Danu Temple',
+  Dubai: 'Dubai skyline',
+  Paris: 'Eiffel Tower',
+  London: 'Tower Bridge'
+};
+
 export default function ListingDetails() {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
@@ -73,7 +86,7 @@ export default function ListingDetails() {
       <h1>{listing.title}</h1>
       <div className="detail-location"><span><MapPin size={16} /> {listing.location}, {listing.city}, {listing.country}</span><span><Star size={16} fill="currentColor" /> {listing.rating?.toFixed(1)} · {listing.reviewCount} reviews</span></div>
       <div className="gallery">
-        {listing.images?.slice(0, 5).map((image, index) => <img key={image} className={index === 0 ? 'main-image' : ''} src={image} alt={`${listing.title} view ${index + 1}`} />)}
+        {listing.images?.slice(0, 5).map((image, index) => <img key={image} className={index === 0 ? 'main-image' : ''} src={image} alt={index === 1 ? `${landmarkNames[listing.city] || listing.city} near ${listing.city}` : `${listing.title} view ${index + 1}`} />)}
       </div>
       <div className="detail-layout">
         <section className="detail-main">
