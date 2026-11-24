@@ -147,16 +147,20 @@ The listing detail page uses a polished approximate-location fallback. To enable
 
 ## Deployment
 
-- Frontend: Vercel or Netlify; set `VITE_API_URL` to the deployed API URL.
-- Backend: Render or another Node.js host; set all server environment variables.
-- Database: MongoDB Atlas.
-- Use `npm run build --prefix client` for the production frontend build.
-- Keep `.env` files out of source control.
+This repository includes a Render Blueprint in `render.yaml` and a Vercel SPA rewrite in `client/vercel.json`.
+
+1. Create a MongoDB Atlas database and a database user. Keep the connection string private.
+2. Deploy the repository to Render using the Blueprint. Set the prompted `MONGODB_URI`, a strong random `JWT_SECRET`, and `CLIENT_URL` after Vercel creates the frontend URL. Add your Razorpay test key ID and secret in Render's environment settings.
+3. If the Atlas database is empty, seed it once from your machine with `MONGODB_URI` set in `server/.env` using `npm run seed --prefix server`. The normal seed command deletes existing records, so never run it against a database containing data you need. The seed includes public development accounts, including an admin and hosts; change or remove their passwords before making the site public.
+4. Create a Vercel project from this repository with `client` as the Root Directory. Set `VITE_API_URL` to `https://<your-render-service>.onrender.com/api` and deploy.
+5. Set the exact Vercel site origin as Render's `CLIENT_URL`, then redeploy the API.
+6. In Razorpay test mode, configure a `payment.captured` webhook at `https://<your-render-service>.onrender.com/api/payments/webhook`; put its webhook secret in Render as `RAZORPAY_WEBHOOK_SECRET`.
+
+Use test-mode Razorpay credentials for a public demo; test payments do not collect real money. To accept real payments, first activate live mode with Razorpay, then replace the server-side key ID and secret in Render and configure a live webhook. Never put secrets in Vercel, source control, or chat. Render's free service may sleep when idle and take a little time to wake up.
 
 ## Future Improvements
 
 - Provider SDK for interactive maps
-- Payment gateway integration
 - Automated email notifications
 - Image upload service
 - Advanced review moderation and analytics
