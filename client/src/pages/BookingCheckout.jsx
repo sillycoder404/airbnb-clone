@@ -1,30 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, CreditCard, ShieldCheck, Smartphone, Star } from 'lucide-react';
+import { ArrowLeft, CreditCard, Smartphone, Star, Wallet } from 'lucide-react';
 import api from '../services/api';
-import { useAuth } from '../context/AuthContext';
-
-function loadRazorpayCheckout() {
-  return new Promise((resolve, reject) => {
-    if (window.Razorpay) {
-      resolve();
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => resolve();
-    script.onerror = () => {
-      script.remove();
-      reject(new Error('Secure checkout could not be loaded. Please try again.'));
-    };
-    document.body.appendChild(script);
-  });
-}
 
 function formatINR(amount) {
   return `₹${amount.toLocaleString('en-IN')}`;
 }
+
+const paymentOptions = [
+  { value: 'card', label: 'Card', description: 'Credit or debit card', Icon: CreditCard },
+  { value: 'wallet', label: 'Wallet', description: 'Digital wallet', Icon: Wallet },
+  { value: 'upi', label: 'UPI', description: 'UPI app', Icon: Smartphone }
+];
 
 export default function BookingCheckout() {
   const { id } = useParams();
@@ -35,7 +22,7 @@ export default function BookingCheckout() {
   const [hostMessage, setHostMessage] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const { user } = useAuth();
+  const [paymentMethod, setPaymentMethod] = useState('card');
   const navigate = useNavigate();
 
   const checkIn = searchParams.get('checkIn') || '';
@@ -59,7 +46,7 @@ export default function BookingCheckout() {
   const continueToPayment = async (event) => {
     event.preventDefault();
     if (!acceptedTerms) {
-      setError('Please agree to the booking and cancellation terms before continuing.');
+      setError('Please confirm you understand this is a demo booking.');
       return;
     }
     if (!listing || nights < 1 || guests > listing.maxGuests) {
@@ -69,70 +56,19 @@ export default function BookingCheckout() {
 
     setProcessing(true);
     setError('');
-    let orderData;
     try {
-      const { data } = await api.post('/payments/orders', {
+      const { data } = await api.post('/bookings', {
         listingId: id,
         checkIn,
         checkOut,
         guests,
-        hostMessage
+        hostMessage,
+        paymentMethod
       });
-      orderData = data;
-      await loadRazorpayCheckout();
+      navigate('/trips', { state: { message: data.message } });
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Could not start secure checkout.');
-      setProcessing(false);
-      return;
-    }
-
-    try {
-      const checkout = new window.Razorpay({
-        key: orderData.keyId,
-        amount: orderData.order.amount,
-        currency: orderData.order.currency,
-        name: 'Airbnb Clone',
-        description: listing.title,
-        order_id: orderData.order.id,
-        prefill: { name: user?.name, email: user?.email },
-        config: {
-          display: {
-            blocks: {
-              preferred: {
-                name: 'Pay with UPI or card',
-                instruments: [{ method: 'upi' }, { method: 'card' }]
-              }
-            },
-            sequence: ['block.preferred'],
-            preferences: { show_default_blocks: false }
-          }
-        },
-        handler: async (paymentResponse) => {
-          setProcessing(true);
-          setError('');
-          try {
-            const { data } = await api.post('/payments/verify', {
-              bookingId: orderData.bookingId,
-              ...paymentResponse
-            });
-            navigate('/trips', { state: { message: data.message } });
-          } catch (err) {
-            setError(err.response?.data?.message || 'Payment verification failed. Please contact support before trying again.');
-          } finally {
-            setProcessing(false);
-          }
-        },
-        modal: { ondismiss: () => setProcessing(false) },
-        theme: { color: '#176b4d' }
-      });
-      checkout.on('payment.failed', (response) => {
-        setError(response.error?.description || 'Payment failed. You can try again.');
-        setProcessing(false);
-      });
-      checkout.open();
-      setProcessing(false);
-    } catch (err) {
-      setError(err.message || 'Secure checkout could not be opened.');
+      setError(err.response?.data?.message || 'Could not confirm this demo booking.');
+    } finally {
       setProcessing(false);
     }
   };
@@ -148,7 +84,7 @@ export default function BookingCheckout() {
   return (
     <main className="checkout-page">
       <Link className="checkout-back" to={`/listings/${id}`}><ArrowLeft size={18} /> Back to stay</Link>
-      <h1>Review and pay</h1>
+      <h1>Review your booking</h1>
       <div className="checkout-layout">
         <form className="checkout-main" onSubmit={continueToPayment}>
           <section className="checkout-host-card">
@@ -170,27 +106,38 @@ export default function BookingCheckout() {
           </section>
 
           <section className="checkout-payment">
-            <h2>Payment options</h2>
-            <p>Your booking is confirmed after payment succeeds.</p>
+            <h2>Demo payment options</h2>
+            <p>Choose an option to simulate checkout. No money will be charged.</p>
             <div className="checkout-payment-methods">
-              <div><Smartphone size={20} /><span>UPI</span></div>
-              <div><CreditCard size={20} /><span>Credit or debit card</span></div>
+              {paymentOptions.map(({ value, label, description, Icon }) => (
+                <label className={`checkout-payment-option${paymentMethod === value ? ' selected' : ''}`} key={value}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value={value}
+                    checked={paymentMethod === value}
+                    onChange={() => setPaymentMethod(value)}
+                  />
+                  <Icon size={20} />
+                  <span><strong>{label}</strong><small>{description}</small></span>
+                </label>
+              ))}
             </div>
-            <p className="checkout-secure"><ShieldCheck size={17} /> Payments are securely processed by Razorpay. Card details are never stored on this site.</p>
+            <p className="checkout-demo-note">Demo only — this does not connect to a bank, wallet, or payment provider.</p>
           </section>
 
           <section className="checkout-policy">
             <h2>Cancellation policy</h2>
-            <p>Refunds are based on the total paid: cancel 48 hours or more before check-in for 75% back; cancel at least 24 but less than 48 hours before for 50% back; cancellations less than 24 hours before check-in are non-refundable.</p>
+            <p>This is a simulated booking. No real payment is taken, and cancellations do not issue refunds.</p>
           </section>
 
           <label className="checkout-terms">
             <input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} />
-            <span>I agree to the booking terms and cancellation policy.</span>
+            <span>I understand this is a demo booking and no real payment will be made.</span>
           </label>
           {error && <div className="booking-message" role="alert">{error}</div>}
           <button className="checkout-pay-button" type="submit" disabled={processing || !acceptedTerms}>
-            {processing ? 'Preparing secure checkout…' : 'Continue to payment'}
+            {processing ? 'Confirming demo booking…' : 'Confirm demo booking'}
           </button>
         </form>
 

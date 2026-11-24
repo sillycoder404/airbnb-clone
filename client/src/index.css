@@ -167,10 +167,15 @@ a { color:inherit; text-decoration:none; }
 .checkout-host span { color:var(--muted); font-size:13px; }
 .checkout-host-card textarea { width:100%; min-height:92px; border:1px solid #cfd4d0; border-radius:10px; padding:12px; resize:vertical; outline-color:var(--green); }
 .checkout-host-card > small { display:block; color:var(--muted); font-size:12px; text-align:right; margin-top:5px; }
-.checkout-payment-methods { display:flex; gap:12px; margin:14px 0; }
-.checkout-payment-methods div { min-width:138px; display:flex; align-items:center; gap:9px; border:1px solid var(--line); border-radius:11px; padding:12px; font-size:14px; font-weight:700; }
-.checkout-payment-methods svg, .checkout-secure svg { color:var(--green); flex:none; }
-.checkout-payment .checkout-secure { display:flex; align-items:flex-start; gap:7px; font-size:12px; margin:14px 0 0; }
+.checkout-payment-methods { display:flex; flex-wrap:wrap; gap:12px; margin:14px 0; }
+.checkout-payment-option { flex:1; min-width:138px; display:flex; align-items:center; gap:9px; border:1px solid var(--line); border-radius:11px; padding:12px; cursor:pointer; }
+.checkout-payment-option.selected { border-color:var(--green); background:#f3f8f5; }
+.checkout-payment-option input { accent-color:var(--green); }
+.checkout-payment-option svg { color:var(--green); flex:none; }
+.checkout-payment-option span { display:grid; gap:3px; }
+.checkout-payment-option strong { font-size:14px; }
+.checkout-payment-option small, .checkout-demo-note { color:var(--muted); font-size:12px; }
+.checkout-payment .checkout-demo-note { margin:14px 0 0; }
 .checkout-policy { background:#fafbf9; }
 .checkout-policy > p { margin:0; }
 .checkout-terms { display:flex; align-items:flex-start; gap:10px; color:var(--muted); font-size:13px; line-height:1.5; }

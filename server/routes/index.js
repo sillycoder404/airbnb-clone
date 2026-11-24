@@ -2,7 +2,6 @@ import { Router } from 'express';
 import authRoutes from './authRoutes.js';
 import listingRoutes from './listingRoutes.js';
 import bookingRoutes from './bookingRoutes.js';
-import paymentRoutes from './paymentRoutes.js';
 import hostRoutes from './hostRoutes.js';
 import reviewRoutes from './reviewRoutes.js';
 import wishlistRoutes from './wishlistRoutes.js';
@@ -17,7 +16,6 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/listings', listingRoutes);
 router.use('/bookings', bookingRoutes);
-router.use('/payments', paymentRoutes);
 router.use('/host', hostRoutes);
 router.use('/wishlist', wishlistRoutes);
 router.use('/admin', adminRoutes);

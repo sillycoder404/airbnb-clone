@@ -8,7 +8,7 @@ Airbnb Clone is a full-stack, Airbnb-inspired rental marketplace built with Reac
 - Homepage stay carousels grouped by destination, with six stays per city and expanded Gurugram and Dehradun rows
 - Listing details, image galleries, amenities, maps fallback, and reviews
 - JWT registration/login, protected routes, roles, and password hashing
-- Razorpay checkout for UPI and cards, server-verified payments, and partial cancellation refunds
+- Demo checkout options for card, wallet, and UPI
 - Real date-overlap validation and dynamic booking totals
 - My Trips, saved wishlist listings, and host management
 - Host dashboard, listing CRUD, reservations, and listing performance
@@ -48,7 +48,6 @@ cp client/.env.example client/.env
 ```
 
 Set `MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, and optionally `MAPS_API_KEY`.
-For payments, set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and `RAZORPAY_WEBHOOK_SECRET` in `server/.env`.
 
 Start MongoDB locally or create a MongoDB Atlas cluster. For a local MongoDB instance, use:
 
@@ -98,13 +97,9 @@ Development accounts:
 
 These are development-only credentials. Use strong, unique credentials and secrets in production.
 
-## Payments
+## Demo Checkout
 
-The checkout uses Razorpay Standard Checkout in INR. Configure UPI and card methods in your Razorpay Dashboard. After deploying the API, add a Razorpay webhook pointing to `/api/payments/webhook` and subscribe to the `payment.captured` event. Copy that webhook's secret into `RAZORPAY_WEBHOOK_SECRET`.
-
-The cancellation policy refunds 75% when cancelled at least 48 hours before check-in, 50% when cancelled 24–48 hours before check-in, and 0% within 24 hours. Refunds are requested through Razorpay; their processing time depends on the provider.
-
-Never put the Razorpay secret or webhook secret in frontend variables, source control, or chat. Start with Razorpay test-mode keys; only switch to live keys after completing a test payment and refund.
+The card, wallet, and UPI options are simulations for demonstration only. No payment provider is contacted, no payment details are collected, and no money is charged or refunded. Do not use demo bookings to accept real reservations or payments.
 
 ## API Overview
 
@@ -112,8 +107,7 @@ Never put the Razorpay secret or webhook secret in frontend variables, source co
 |---|---|
 | Auth | `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me` |
 | Listings | `GET /api/listings`, `GET /api/listings/search`, `GET /api/listings/:id`, CRUD routes |
-| Payments | `POST /api/payments/orders`, `POST /api/payments/verify`, `POST /api/payments/webhook` |
-| Bookings | `GET /api/bookings/my`, `GET /api/bookings/:id`, `DELETE /api/bookings/:id` |
+| Bookings | `POST /api/bookings`, `GET /api/bookings/my`, `GET /api/bookings/:id`, `DELETE /api/bookings/:id` |
 | Host | `GET /api/host/listings`, `GET /api/host/bookings`, `GET /api/host/dashboard` |
 | Reviews | `GET/POST /api/listings/:id/reviews` |
 | Wishlist | `GET /api/wishlist`, `POST/DELETE /api/wishlist/:listingId` |
@@ -150,17 +144,15 @@ The listing detail page uses a polished approximate-location fallback. To enable
 This repository includes a Render Blueprint in `render.yaml` and a Vercel SPA rewrite in `client/vercel.json`.
 
 1. Create a MongoDB Atlas database and a database user. Keep the connection string private.
-2. Deploy the repository to Render using the Blueprint. Set the prompted `MONGODB_URI`, a strong random `JWT_SECRET`, and `CLIENT_URL` after Vercel creates the frontend URL. Add your Razorpay test key ID and secret in Render's environment settings.
+2. Deploy the repository to Render using the Blueprint. Set the prompted `MONGODB_URI`, a strong random `JWT_SECRET`, and `CLIENT_URL` after Vercel creates the frontend URL.
 3. If the Atlas database is empty, seed it once from your machine with `MONGODB_URI` set in `server/.env` using `npm run seed --prefix server`. The normal seed command deletes existing records, so never run it against a database containing data you need. The seed includes public development accounts, including an admin and hosts; change or remove their passwords before making the site public.
 4. Create a Vercel project from this repository with `client` as the Root Directory. Set `VITE_API_URL` to `https://<your-render-service>.onrender.com/api` and deploy.
 5. Set the exact Vercel site origin as Render's `CLIENT_URL`, then redeploy the API.
-6. In Razorpay test mode, configure a `payment.captured` webhook at `https://<your-render-service>.onrender.com/api/payments/webhook`; put its webhook secret in Render as `RAZORPAY_WEBHOOK_SECRET`.
-
-Use test-mode Razorpay credentials for a public demo; test payments do not collect real money. To accept real payments, first activate live mode with Razorpay, then replace the server-side key ID and secret in Render and configure a live webhook. Never put secrets in Vercel, source control, or chat. Render's free service may sleep when idle and take a little time to wake up.
+Demo checkout options do not charge money. Render's free service may sleep when idle and take a little time to wake up.
 
 ## Future Improvements
 
 - Provider SDK for interactive maps
 - Automated email notifications
-- Image upload service
+- Real payment integration
 - Advanced review moderation and analytics
