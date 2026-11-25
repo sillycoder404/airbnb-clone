@@ -30,7 +30,7 @@ function Profile() {
 
 function InfoPage({ type }) {
   const content = type === 'about'
-    ? { title: 'About Airbnb Clone', intro: 'A modern marketplace for memorable stays.', text: 'Airbnb Clone connects travelers with thoughtfully chosen homes and unique escapes while demonstrating a complete React, Express, MongoDB, authentication, booking, and host-management experience.' }
+    ? { title: 'About Airbnb Clone', intro: 'A modern marketplace for memorable stays.', text: 'Airbnb Clone connects travelers with thoughtfully chosen homes and unique escapes through a React, Express, MongoDB, authentication, booking, and host-management experience.' }
     : { title: 'Help center', intro: 'Answers for a smoother stay.', text: 'Open a listing to view details and book. Manage reservations in My Trips and properties in the host dashboard. If the backend is unavailable, verify the environment configuration and server connection.' };
   return (
     <main className="simple-page info-page">

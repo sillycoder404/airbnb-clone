@@ -174,8 +174,8 @@ a { color:inherit; text-decoration:none; }
 .checkout-payment-option svg { color:var(--green); flex:none; }
 .checkout-payment-option span { display:grid; gap:3px; }
 .checkout-payment-option strong { font-size:14px; }
-.checkout-payment-option small, .checkout-demo-note { color:var(--muted); font-size:12px; }
-.checkout-payment .checkout-demo-note { margin:14px 0 0; }
+.checkout-payment-option small, .checkout-payment-note { color:var(--muted); font-size:12px; }
+.checkout-payment .checkout-payment-note { margin:14px 0 0; }
 .checkout-policy { background:#fafbf9; }
 .checkout-policy > p { margin:0; }
 .checkout-terms { display:flex; align-items:flex-start; gap:10px; color:var(--muted); font-size:13px; line-height:1.5; }

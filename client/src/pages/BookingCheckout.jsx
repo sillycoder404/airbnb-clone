@@ -47,7 +47,7 @@ export default function BookingCheckout() {
   const confirmBooking = async (event) => {
     event.preventDefault();
     if (!acceptedTerms) {
-      setError('Please confirm you understand this is a demo booking.');
+      setError('Please confirm you understand that payment will not be processed.');
       return;
     }
     if (!listing || nights < 1 || guests > listing.maxGuests) {
@@ -69,7 +69,7 @@ export default function BookingCheckout() {
       });
       navigate('/trips', { state: { message: data.message } });
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not confirm this demo booking.');
+      setError(err.response?.data?.message || 'Could not confirm your booking.');
       setDatesUnavailable(err.response?.data?.code === 'DATES_UNAVAILABLE');
     } finally {
       setProcessing(false);
@@ -109,8 +109,8 @@ export default function BookingCheckout() {
           </section>
 
           <section className="checkout-payment">
-            <h2>Demo payment options</h2>
-            <p>Choose an option to simulate checkout. No money will be charged.</p>
+            <h2>Payment options</h2>
+            <p>Choose Card, Wallet, or UPI. Payment processing is unavailable, so you will not be charged.</p>
             <div className="checkout-payment-methods">
               {paymentOptions.map(({ value, label, description, Icon }) => (
                 <label className={`checkout-payment-option${paymentMethod === value ? ' selected' : ''}`} key={value}>
@@ -126,17 +126,17 @@ export default function BookingCheckout() {
                 </label>
               ))}
             </div>
-            <p className="checkout-demo-note">Demo only — this does not connect to a bank, wallet, or payment provider.</p>
+            <p className="checkout-payment-note">No payment details are collected, and no payment is processed on this site.</p>
           </section>
 
           <section className="checkout-policy">
             <h2>Cancellation policy</h2>
-            <p>Cancel 48 hours or more before check-in for a 75% simulated refund; cancel at least 24 but less than 48 hours before for 50%; within 24 hours, no simulated refund applies. No real payment is charged or refunded.</p>
+            <p>Cancel 48 hours or more before check-in for a 75% refund estimate; cancel at least 24 but less than 48 hours before for 50%; within 24 hours, no refund estimate applies. Since payments are not processed here, these are estimates only and no money is charged or returned.</p>
           </section>
 
           <label className="checkout-terms">
             <input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} />
-            <span>I understand this is a demo booking and no real payment will be made.</span>
+            <span>I understand that no payment will be processed or charged for this booking.</span>
           </label>
           {error && <div className="booking-message" role="alert">{error}{datesUnavailable && <Link className="booking-message-link" to={`/listings/${id}`}>Choose different dates</Link>}</div>}
           <button className="checkout-pay-button" type="submit" disabled={processing || !acceptedTerms}>

@@ -9,7 +9,7 @@ export default function Footer() {
       </div>
       <div><strong>Explore</strong><Link to="/search">Search stays</Link><Link to="/search?destination=Goa">Goa</Link><Link to="/search?destination=Manali">Manali</Link></div>
       <div><strong>Support</strong><Link to="/help">Help center</Link><Link to="/about">About Airbnb Clone</Link><Link to="/host">Become a host</Link></div>
-      <small>© 2026 Airbnb Clone. Built for demonstration and learning.</small>
+      <small>© 2026 Airbnb Clone.</small>
     </footer>
   );
 }

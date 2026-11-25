@@ -17,7 +17,7 @@ export async function createBooking(req, res, next) {
       return res.status(400).json({ message: 'Your message to the host must be 1,000 characters or fewer' });
     }
     if (!isDemoPaymentMethod(paymentMethod)) {
-      return res.status(400).json({ message: 'Choose a demo payment option: card, wallet, or UPI' });
+      return res.status(400).json({ message: 'Choose a payment option: card, wallet, or UPI' });
     }
 
     const listing = await Listing.findById(listingId);
@@ -41,7 +41,7 @@ export async function createBooking(req, res, next) {
       status: 'confirmed'
     }).populate('listing', 'title city country images');
     if (existingBooking) {
-      return res.json({ message: 'You already have this stay booked. It is listed in My Trips.', booking: existingBooking });
+      return res.json({ message: 'You already have this stay booked. It is listed in My Trips. No payment was processed.', booking: existingBooking });
     }
 
     const conflict = await Booking.findOne({
@@ -79,7 +79,7 @@ export async function createBooking(req, res, next) {
     });
 
     await booking.populate('listing', 'title city country images');
-    res.status(201).json({ message: 'Demo booking confirmed. No real payment was charged.', booking });
+    res.status(201).json({ message: 'Booking confirmed. No payment was processed or charged.', booking });
   } catch (error) {
     next(error);
   }
@@ -132,8 +132,8 @@ export async function cancelBooking(req, res, next) {
     await booking.save();
     const message = booking.paymentStatus === 'simulated'
       ? refund.percentage
-        ? `Demo booking cancelled. Simulated refund: ${refund.percentage}% (₹${refund.amount.toLocaleString('en-IN')}). No real money was charged or refunded.`
-        : 'Demo booking cancelled. No simulated refund applies within 24 hours; no real money was charged.'
+        ? `Booking cancelled. Estimated refund: ${refund.percentage}% (₹${refund.amount.toLocaleString('en-IN')}). No payment was processed, so no money is being returned.`
+        : 'Booking cancelled. No refund estimate applies within 24 hours. No payment was processed or charged.'
       : 'Booking cancelled';
     res.json({ message, booking });
   } catch (error) {

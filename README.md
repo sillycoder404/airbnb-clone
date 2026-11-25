@@ -8,7 +8,7 @@ Airbnb Clone is a full-stack, Airbnb-inspired rental marketplace built with Reac
 - Homepage stay carousels grouped by destination, with six stays per city and expanded Gurugram and Dehradun rows
 - Listing details, image galleries, amenities, maps fallback, and reviews
 - JWT registration/login, protected routes, roles, and password hashing
-- Demo checkout options for card, wallet, and UPI
+- Card, wallet, and UPI payment options
 - Real date-overlap validation and dynamic booking totals
 - My Trips, saved wishlist listings, and host management
 - Host dashboard, listing CRUD, reservations, and listing performance
@@ -97,9 +97,9 @@ Development accounts:
 
 These are development-only credentials. Use strong, unique credentials and secrets in production.
 
-## Demo Checkout
+## Checkout
 
-The card, wallet, and UPI options are simulations for demonstration only. No payment provider is contacted, no payment details are collected, and no money is charged or refunded. The checkout shows a simulated cancellation policy: 75% at least 48 hours before check-in, 50% at least 24 hours before, or 0% within 24 hours. Cancellation records the simulated amount for the guest and host to view. Do not use demo bookings to accept real reservations or payments.
+The card, wallet, and UPI choices record a selected method, but payment processing is not enabled. No payment details are collected, and no money is charged or returned. The checkout shows refund estimates of 75% at least 48 hours before check-in, 50% at least 24 hours before, or 0% within 24 hours. These estimates do not represent money returned.
 
 ## API Overview
 
@@ -148,7 +148,7 @@ This repository includes a Render Blueprint in `render.yaml` and a Vercel SPA re
 3. If the Atlas database is empty, seed it once from your machine with `MONGODB_URI` set in `server/.env` using `npm run seed --prefix server`. The normal seed command deletes existing records, so never run it against a database containing data you need. The seed includes public development accounts, including an admin and hosts; change or remove their passwords before making the site public.
 4. Create a Vercel project from this repository with `client` as the Root Directory. Set `VITE_API_URL` to `https://<your-render-service>.onrender.com/api` and deploy.
 5. Set the exact Vercel site origin as Render's `CLIENT_URL`, then redeploy the API.
-Demo checkout options do not charge money. Render's free service may sleep when idle and take a little time to wake up.
+Checkout options do not process or charge payments. Render's free service may sleep when idle and take a little time to wake up.
 
 ## Future Improvements
 

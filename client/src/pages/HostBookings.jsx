@@ -26,7 +26,7 @@ export default function HostBookings() {
             <div className="table-wrap">
               <table>
                 <thead>
-                  <tr><th>Guest</th><th>Stay</th><th>Dates</th><th>Guests</th><th>Status</th><th>Payment option</th><th>Total</th><th>Simulated refund</th></tr>
+                  <tr><th>Guest</th><th>Stay</th><th>Dates</th><th>Guests</th><th>Status</th><th>Payment option</th><th>Total</th><th>Refund estimate</th></tr>
                 </thead>
                 <tbody>
                   {bookings.map((booking) => (
@@ -36,10 +36,10 @@ export default function HostBookings() {
                       <td>{new Date(booking.checkIn).toLocaleDateString()} – {new Date(booking.checkOut).toLocaleDateString()}</td>
                       <td>{booking.guests}</td>
                       <td>{booking.status.replaceAll('_', ' ')}</td>
-                      <td>{booking.paymentStatus === 'simulated' ? `${booking.paymentMethod?.toUpperCase()} (demo)` : '—'}</td>
+                      <td>{booking.paymentStatus === 'simulated' ? `${booking.paymentMethod?.toUpperCase()} selected · not processed` : '—'}</td>
                       <td>₹{booking.totalPrice.toLocaleString('en-IN')}</td>
                       <td>{booking.status === 'cancelled' && booking.paymentStatus === 'simulated'
-                        ? `${booking.simulatedRefundPercentage}% · ₹${booking.simulatedRefundAmount.toLocaleString('en-IN')}`
+                        ? `${booking.simulatedRefundPercentage}% · ₹${booking.simulatedRefundAmount.toLocaleString('en-IN')} (not issued)`
                         : '—'}</td>
                     </tr>
                   ))}
