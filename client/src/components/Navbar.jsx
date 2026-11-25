@@ -33,7 +33,9 @@ export default function Navbar() {
         </form>
 
         <div className={`nav-actions ${open ? 'open' : ''}`}>
-          {user?.role === 'HOST' || user?.role === 'ADMIN'
+          {user?.role === 'ADMIN'
+            ? <Link to="/admin" onClick={() => setOpen(false)}>Admin portal</Link>
+            : user?.role === 'HOST'
             ? <Link to="/host" onClick={() => setOpen(false)}>Host dashboard</Link>
             : <Link to={user ? '/host' : '/register'} onClick={() => setOpen(false)}>Become a host</Link>}
           <Link to="/help" className="icon-link" aria-label="Help"><Globe2 size={20} /></Link>
@@ -51,6 +53,7 @@ export default function Navbar() {
                     <Link to="/host/bookings">Reservations</Link>
                     <Link to="/host/listings">My listings</Link>
                   </>}
+                  {user.role === 'ADMIN' && <Link to="/admin">Admin portal</Link>}
                   <button onClick={logout}>Log out</button>
                 </div>
               </details>

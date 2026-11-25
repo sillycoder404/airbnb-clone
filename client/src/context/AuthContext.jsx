@@ -36,13 +36,19 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
+  const updateAvatar = async (avatar) => {
+    const { data } = await api.patch('/auth/avatar', { avatar });
+    setUser(data.user);
+    return data.user;
+  };
+
   const logout = () => {
     localStorage.removeItem('staynest_token');
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, updateAvatar, logout }}>
       {children}
     </AuthContext.Provider>
   );

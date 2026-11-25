@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { register, login, me } from '../controllers/authController.js';
+import { register, login, me, updateAvatar } from '../controllers/authController.js';
 import { protect } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 
@@ -18,5 +18,6 @@ router.post('/login', [
 ], validate, login);
 
 router.get('/me', protect, me);
+router.patch('/avatar', protect, updateAvatar);
 
 export default router;

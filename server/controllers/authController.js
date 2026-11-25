@@ -43,3 +43,33 @@ export async function login(req, res, next) {
 export async function me(req, res) {
   res.json({ user: req.user });
 }
+
+export async function updateAvatar(req, res, next) {
+  try {
+    const match = typeof req.body?.avatar === 'string'
+      ? /^data:image\/jpeg;base64,([A-Za-z0-9+/]+={0,2})$/.exec(req.body.avatar)
+      : null;
+    if (!match) return res.status(400).json({ message: 'Choose a valid image to upload' });
+
+    const image = Buffer.from(match[1], 'base64');
+    if (
+      image.length > 256 * 1024 ||
+      image.toString('base64') !== match[1] ||
+      image[0] !== 0xff ||
+      image[1] !== 0xd8
+    ) {
+      return res.status(400).json({ message: 'The image must be a JPEG smaller than 256 KB' });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'Account not found' });
+    user.avatar = req.body.avatar;
+    await user.save();
+
+    res.json({
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar }
+    });
+  } catch (error) {
+    next(error);
+  }
+}

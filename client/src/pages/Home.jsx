@@ -87,7 +87,7 @@ export default function Home() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ destination: '', checkIn: '', checkOut: '', guests: 1 });
+  const [form, setForm] = useState({ destination: '', checkIn: '', checkOut: '', guests: 1, propertyType: '', beds: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,6 +127,8 @@ export default function Home() {
             <label><span>Check in</span><input type="date" value={form.checkIn} onChange={(e) => setForm({ ...form, checkIn: e.target.value })} /></label>
             <label><span>Check out</span><input type="date" value={form.checkOut} min={form.checkIn} onChange={(e) => setForm({ ...form, checkOut: e.target.value })} /></label>
             <label><span>Guests</span><select value={form.guests} onChange={(e) => setForm({ ...form, guests: e.target.value })}>{[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>)}</select></label>
+            <label><span>Property type</span><select value={form.propertyType} onChange={(e) => setForm({ ...form, propertyType: e.target.value })}><option value="">Any type</option>{['House','Apartment','Villa','Cabin','Cottage','Room','Resort'].map(type => <option key={type} value={type}>{type}</option>)}</select></label>
+            <label><span>Beds</span><select value={form.beds} onChange={(e) => setForm({ ...form, beds: e.target.value })}><option value="">Any</option>{[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n}+ bed{n > 1 ? 's' : ''}</option>)}</select></label>
             <button aria-label="Search stays"><Search size={20} /> <span>Search</span></button>
           </form>
         </div>

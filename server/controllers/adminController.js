@@ -22,7 +22,61 @@ export async function getListings(req, res, next) {
 export async function getBookings(req, res, next) {
   try {
     res.json({
-      bookings: await Booking.find().populate('user', 'name email').populate('listing', 'title').sort({ createdAt: -1 })
+      bookings: await Booking.find()
+        .populate('user', 'name email')
+        .populate('listing', 'title city country')
+        .sort({ createdAt: -1 })
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getDashboard(req, res, next) {
+  try {
+    const [
+      totalUsers,
+      travelers,
+      hosts,
+      totalListings,
+      totalBookings,
+      confirmedBookings,
+      cancelledBookings,
+      completedBookings,
+      bookingValue,
+      collectedEarnings
+    ] = await Promise.all([
+      User.countDocuments(),
+      User.countDocuments({ role: 'USER' }),
+      User.countDocuments({ role: 'HOST' }),
+      Listing.countDocuments(),
+      Booking.countDocuments(),
+      Booking.countDocuments({ status: 'confirmed' }),
+      Booking.countDocuments({ status: 'cancelled' }),
+      Booking.countDocuments({ status: 'completed' }),
+      Booking.aggregate([
+        { $match: { status: 'confirmed' } },
+        { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+      ]),
+      Booking.aggregate([
+        { $match: { paymentStatus: 'paid' } },
+        { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+      ])
+    ]);
+
+    res.json({
+      stats: {
+        totalUsers,
+        travelers,
+        hosts,
+        totalListings,
+        totalBookings,
+        confirmedBookings,
+        cancelledBookings,
+        completedBookings,
+        confirmedBookingValue: bookingValue[0]?.total || 0,
+        collectedEarnings: collectedEarnings[0]?.total || 0
+      }
     });
   } catch (error) {
     next(error);

@@ -41,7 +41,7 @@ export default function ListingCard({ listing }) {
         <span><Star size={14} fill="currentColor" /> {listing.rating?.toFixed(1) || 'New'}</span>
       </div>
       <h3>{listing.title}</h3>
-      <p className="card-info">{listing.bedrooms} bedrooms · Up to {listing.maxGuests} guests</p>
+      <p className="card-info">{listing.beds ? `${listing.beds} bed${listing.beds === 1 ? '' : 's'} · ` : ''}{listing.bedrooms} bedrooms · Up to {listing.maxGuests} guests</p>
       <p className="price"><strong>₹{listing.pricePerNight?.toLocaleString('en-IN')}</strong> night</p>
     </Link>
   );

@@ -7,7 +7,7 @@ export function AuthPage({ mode }) {
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'USER' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, register } = useAuth();
+  const { login, register, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,9 +18,23 @@ export function AuthPage({ mode }) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return setError('Invalid email');
     setLoading(true);
     try {
-      if (isRegister) await register(form);
-      else await login({ email: form.email, password: form.password });
-      navigate(location.state?.from?.pathname || '/');
+      const user = isRegister
+        ? await register(form)
+        : await login({ email: form.email, password: form.password });
+      if (!isRegister && user.role !== form.role) {
+        logout();
+        const roleName = { USER: 'traveler', HOST: 'host', ADMIN: 'admin' }[user.role] || 'another';
+        setError(`This account is registered as a ${roleName}. Select that account type and try again.`);
+        return;
+      }
+      const from = location.state?.from;
+      navigate(from
+        ? `${from.pathname || ''}${from.search || ''}${from.hash || ''}`
+        : user.role === 'ADMIN'
+          ? '/admin'
+          : user.role === 'HOST'
+            ? '/host'
+            : '/');
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to connect to the server');
     } finally {
@@ -38,6 +52,7 @@ export function AuthPage({ mode }) {
         <label>Email<input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" required /></label>
         <label>Password<input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required /></label>
         {isRegister && <label>I am joining as<select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}><option value="USER">Traveler</option><option value="HOST">Host</option></select></label>}
+        {!isRegister && <label>Sign in as<select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}><option value="USER">Traveler</option><option value="HOST">Host</option><option value="ADMIN">Admin</option></select></label>}
         <button className="primary-button" disabled={loading}>{loading ? 'Please wait...' : isRegister ? 'Create account' : 'Log in'}</button>
         <p>{isRegister ? 'Already have an account?' : 'New to Airbnb Clone?' } <Link to={isRegister ? '/login' : '/register'}>{isRegister ? 'Log in' : 'Create account'}</Link></p>
       </form>

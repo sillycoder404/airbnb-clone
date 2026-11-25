@@ -14,6 +14,7 @@ export default function Search() {
     maxPrice: params.get('maxPrice') || '',
     propertyType: params.get('propertyType') || '',
     bedrooms: params.get('bedrooms') || '',
+    beds: params.get('beds') || '',
     guests: params.get('guests') || '',
     rating: params.get('rating') || '',
     sort: params.get('sort') || ''
@@ -36,7 +37,7 @@ export default function Search() {
   };
 
   const clear = () => {
-    setFilters({ destination: '', minPrice: '', maxPrice: '', propertyType: '', bedrooms: '', guests: '', rating: '', sort: '' });
+    setFilters({ destination: '', minPrice: '', maxPrice: '', propertyType: '', bedrooms: '', beds: '', guests: '', rating: '', sort: '' });
     setParams({});
   };
 
@@ -50,6 +51,7 @@ export default function Search() {
           <label>Maximum price<input type="number" min="0" value={filters.maxPrice} onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })} /></label>
           <label>Property type<select value={filters.propertyType} onChange={(e) => setFilters({ ...filters, propertyType: e.target.value })}><option value="">Any</option>{['House','Apartment','Villa','Cabin','Cottage','Room','Resort'].map(v => <option key={v}>{v}</option>)}</select></label>
           <label>Bedrooms<select value={filters.bedrooms} onChange={(e) => setFilters({ ...filters, bedrooms: e.target.value })}><option value="">Any</option>{[1,2,3,4].map(v => <option key={v} value={v}>{v}+ bedrooms</option>)}</select></label>
+          <label>Beds<select value={filters.beds} onChange={(e) => setFilters({ ...filters, beds: e.target.value })}><option value="">Any</option>{[1,2,3,4,5,6].map(v => <option key={v} value={v}>{v}+ bed{v > 1 ? 's' : ''}</option>)}</select></label>
           <label>Guests<input type="number" min="1" value={filters.guests} onChange={(e) => setFilters({ ...filters, guests: e.target.value })} /></label>
           <label>Minimum rating<select value={filters.rating} onChange={(e) => setFilters({ ...filters, rating: e.target.value })}><option value="">Any</option>{[3,4,4.5].map(v => <option key={v} value={v}>{v}+ stars</option>)}</select></label>
           <button className="primary-button" type="submit">Apply filters</button>
