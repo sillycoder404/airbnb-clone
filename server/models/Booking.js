@@ -14,7 +14,9 @@ const bookingSchema = new mongoose.Schema({
   hostMessage: { type: String, trim: true, maxlength: 1000, default: '' },
   status: { type: String, enum: ['confirmed', 'cancelled', 'completed'], default: 'confirmed', index: true },
   paymentStatus: { type: String, enum: ['not_required', 'simulated'], default: 'not_required' },
-  paymentMethod: { type: String, enum: ['card', 'wallet', 'upi'] }
+  paymentMethod: { type: String, enum: ['card', 'wallet', 'upi'] },
+  simulatedRefundPercentage: { type: Number, enum: [0, 50, 75], default: 0 },
+  simulatedRefundAmount: { type: Number, min: 0, default: 0 }
 }, { timestamps: true });
 
 bookingSchema.index({ listing: 1, checkIn: 1, checkOut: 1, status: 1 });

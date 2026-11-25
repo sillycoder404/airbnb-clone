@@ -21,7 +21,13 @@ export default function Trips() {
     try {
       const { data } = await api.delete(`/bookings/${id}`);
       setBookings((items) => items.map((item) => item._id === id
-        ? { ...item, status: data.booking.status, paymentStatus: data.booking.paymentStatus }
+        ? {
+          ...item,
+          status: data.booking.status,
+          paymentStatus: data.booking.paymentStatus,
+          simulatedRefundPercentage: data.booking.simulatedRefundPercentage,
+          simulatedRefundAmount: data.booking.simulatedRefundAmount
+        }
         : item));
       setMessage(data.message);
     } catch (err) {
@@ -34,7 +40,7 @@ export default function Trips() {
     {loading ? <div className="skeleton-card" /> : error ? <div className="error-state">{error}</div> :
       bookings.length ? <div className="trip-list">{bookings.map(booking => <article className="trip-card" key={booking._id}>
         <Link to={`/listings/${booking.listing._id}`}><img src={booking.listing.images?.[0]} alt={booking.listing.title} /></Link>
-        <div><span className={`status ${booking.status}`}>{booking.status.replaceAll('_', ' ')}</span><h2>{booking.listing.title}</h2><p>{booking.listing.city}, {booking.listing.country}</p><p>{new Date(booking.checkIn).toLocaleDateString()} – {new Date(booking.checkOut).toLocaleDateString()} · {booking.guests} guests</p><strong>₹{booking.totalPrice?.toLocaleString('en-IN')} total</strong>{booking.paymentStatus === 'simulated' && <p>Demo payment: {booking.paymentMethod?.toUpperCase()}</p>}</div>
+        <div><span className={`status ${booking.status}`}>{booking.status.replaceAll('_', ' ')}</span><h2>{booking.listing.title}</h2><p>{booking.listing.city}, {booking.listing.country}</p><p>{new Date(booking.checkIn).toLocaleDateString()} – {new Date(booking.checkOut).toLocaleDateString()} · {booking.guests} guests</p><strong>₹{booking.totalPrice?.toLocaleString('en-IN')} total</strong>{booking.paymentStatus === 'simulated' && <p>Demo payment: {booking.paymentMethod?.toUpperCase()}</p>}{booking.status === 'cancelled' && booking.paymentStatus === 'simulated' && <p>Simulated refund: {booking.simulatedRefundPercentage}% · ₹{booking.simulatedRefundAmount?.toLocaleString('en-IN')}</p>}</div>
         {booking.status === 'confirmed' && <button className="text-button" onClick={() => cancel(booking._id)}>Cancel booking</button>}
       </article>)}</div> : <div className="empty-state"><h2>No trips yet</h2><p>Discover a place for your next memorable stay.</p><Link className="primary-button" to="/search">Explore stays</Link></div>}
   </main>;

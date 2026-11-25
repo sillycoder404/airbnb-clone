@@ -99,7 +99,7 @@ These are development-only credentials. Use strong, unique credentials and secre
 
 ## Demo Checkout
 
-The card, wallet, and UPI options are simulations for demonstration only. No payment provider is contacted, no payment details are collected, and no money is charged or refunded. Do not use demo bookings to accept real reservations or payments.
+The card, wallet, and UPI options are simulations for demonstration only. No payment provider is contacted, no payment details are collected, and no money is charged or refunded. The checkout shows a simulated cancellation policy: 75% at least 48 hours before check-in, 50% at least 24 hours before, or 0% within 24 hours. Cancellation records the simulated amount for the guest and host to view. Do not use demo bookings to accept real reservations or payments.
 
 ## API Overview
 

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import Booking from '../models/Booking.js';
 import Listing from '../models/Listing.js';
-import { isDemoPaymentMethod } from '../utils/demoPayment.js';
+import { calculateDemoRefund, isDemoPaymentMethod } from '../utils/demoPayment.js';
 
 function parseDateOnly(value) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
@@ -32,13 +32,30 @@ export async function createBooking(req, res, next) {
       return res.status(400).json({ message: `This stay allows up to ${listing.maxGuests} guests` });
     }
 
+    const existingBooking = await Booking.findOne({
+      user: req.user._id,
+      listing: listing._id,
+      checkIn: start,
+      checkOut: end,
+      guests,
+      status: 'confirmed'
+    }).populate('listing', 'title city country images');
+    if (existingBooking) {
+      return res.json({ message: 'You already have this stay booked. It is listed in My Trips.', booking: existingBooking });
+    }
+
     const conflict = await Booking.findOne({
       listing: listing._id,
       status: 'confirmed',
       checkIn: { $lt: end },
       checkOut: { $gt: start }
     });
-    if (conflict) return res.status(409).json({ message: 'Those dates are already booked. Please choose another date.' });
+    if (conflict) {
+      return res.status(409).json({
+        message: 'Those dates are already booked. Choose different dates to continue.',
+        code: 'DATES_UNAVAILABLE'
+      });
+    }
 
     const nights = Math.round((end - start) / 86400000);
     const subtotal = listing.pricePerNight * nights;
@@ -106,10 +123,17 @@ export async function cancelBooking(req, res, next) {
     if (booking.status === 'cancelled') return res.status(409).json({ message: 'This booking is already cancelled' });
     if (booking.status !== 'confirmed') return res.status(409).json({ message: 'This booking cannot be cancelled' });
 
+    const refund = booking.paymentStatus === 'simulated'
+      ? calculateDemoRefund(booking.totalPrice, booking.checkIn)
+      : { percentage: 0, amount: 0 };
     booking.status = 'cancelled';
+    booking.simulatedRefundPercentage = refund.percentage;
+    booking.simulatedRefundAmount = refund.amount;
     await booking.save();
     const message = booking.paymentStatus === 'simulated'
-      ? 'Demo booking cancelled. No payment or refund was processed.'
+      ? refund.percentage
+        ? `Demo booking cancelled. Simulated refund: ${refund.percentage}% (₹${refund.amount.toLocaleString('en-IN')}). No real money was charged or refunded.`
+        : 'Demo booking cancelled. No simulated refund applies within 24 hours; no real money was charged.'
       : 'Booking cancelled';
     res.json({ message, booking });
   } catch (error) {

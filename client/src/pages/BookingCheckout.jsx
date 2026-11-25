@@ -19,6 +19,7 @@ export default function BookingCheckout() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [datesUnavailable, setDatesUnavailable] = useState(false);
   const [hostMessage, setHostMessage] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -43,7 +44,7 @@ export default function BookingCheckout() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const continueToPayment = async (event) => {
+  const confirmBooking = async (event) => {
     event.preventDefault();
     if (!acceptedTerms) {
       setError('Please confirm you understand this is a demo booking.');
@@ -56,6 +57,7 @@ export default function BookingCheckout() {
 
     setProcessing(true);
     setError('');
+    setDatesUnavailable(false);
     try {
       const { data } = await api.post('/bookings', {
         listingId: id,
@@ -68,6 +70,7 @@ export default function BookingCheckout() {
       navigate('/trips', { state: { message: data.message } });
     } catch (err) {
       setError(err.response?.data?.message || 'Could not confirm this demo booking.');
+      setDatesUnavailable(err.response?.data?.code === 'DATES_UNAVAILABLE');
     } finally {
       setProcessing(false);
     }
@@ -86,7 +89,7 @@ export default function BookingCheckout() {
       <Link className="checkout-back" to={`/listings/${id}`}><ArrowLeft size={18} /> Back to stay</Link>
       <h1>Review your booking</h1>
       <div className="checkout-layout">
-        <form className="checkout-main" onSubmit={continueToPayment}>
+        <form className="checkout-main" onSubmit={confirmBooking}>
           <section className="checkout-host-card">
             <h2>Write a message to the host</h2>
             <p>Let {listing.host?.name || 'your host'} know a little about your trip.</p>
@@ -128,14 +131,14 @@ export default function BookingCheckout() {
 
           <section className="checkout-policy">
             <h2>Cancellation policy</h2>
-            <p>This is a simulated booking. No real payment is taken, and cancellations do not issue refunds.</p>
+            <p>Cancel 48 hours or more before check-in for a 75% simulated refund; cancel at least 24 but less than 48 hours before for 50%; within 24 hours, no simulated refund applies. No real payment is charged or refunded.</p>
           </section>
 
           <label className="checkout-terms">
             <input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} />
             <span>I understand this is a demo booking and no real payment will be made.</span>
           </label>
-          {error && <div className="booking-message" role="alert">{error}</div>}
+          {error && <div className="booking-message" role="alert">{error}{datesUnavailable && <Link className="booking-message-link" to={`/listings/${id}`}>Choose different dates</Link>}</div>}
           <button className="checkout-pay-button" type="submit" disabled={processing || !acceptedTerms}>
             {processing ? 'Confirming booking…' : 'Confirm booking'}
           </button>
